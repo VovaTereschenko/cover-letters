@@ -1,28 +1,28 @@
 @font-face {
   font-family: "Fixel Display";
   src: url("/fonts/webfonts/FixelDisplay-Regular.woff2") format("woff2");
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Fixel Display";
   src: url("/fonts/webfonts/FixelDisplay-Bold.woff2") format("woff2");
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Fixel Text";
   src: url("/fonts/webfonts/FixelText-Regular.woff2") format("woff2");
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Fixel Text";
   src: url("/fonts/webfonts/FixelText-Bold.woff2") format("woff2");
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-style: normal;
   font-display: swap;
 }
@@ -30,6 +30,38 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Color System */
+  --color-white: #ffffff;
+  --color-green-600: #087443;
+  --color-green-700: #065a35;
+  --color-green-800: #044e2d;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f2f4f7;
+  --color-gray-300: #d0d5dd;
+  --color-gray-500: #667085;
+  --color-gray-600: #475467;
+  --color-gray-700: #344054;
+  --color-gray-800: #1d2939;
+  --color-gray-900: #101828;
+  --color-gray-400: #98a2b3;
+  --color-border: #eaecf0;
+
+  /* Font Weight System */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Font Size System */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --line-height-xs: 18px;
+  --line-height-sm: 20px;
+  --line-height-base: 24px;
+
+  /* Shadow System */
+  --shadow-sm: 0px 1px 2px rgba(16, 24, 40, 0.05);
 
   /* Spacing System */
   --spacing-1: 2px; /* 0.125rem */
@@ -44,8 +76,8 @@
   --spacing-24: 48px; /* 3rem */
 
   /* Progress Indication Theme */
-  --progress-text-color: #667085;
-  --progress-dot-color: #101828;
+  --progress-text-color: var(--color-gray-500);
+  --progress-dot-color: var(--color-gray-900);
   --progress-dot-filled-opacity: 1;
   --progress-dot-empty-opacity: 0.24;
 }
@@ -55,9 +87,21 @@
     --background: #0a0a0a;
     --foreground: #ededed;
 
+    /* Color System Dark Mode */
+    --color-white: #0a0a0a;
+    --color-gray-50: #1a1a1a;
+    --color-gray-100: #262626;
+    --color-gray-300: #404040;
+    --color-gray-500: #94a3b8;
+    --color-gray-600: #d4d4d8;
+    --color-gray-700: #e4e4e7;
+    --color-gray-800: #f4f4f5;
+    --color-gray-900: #f1f5f9;
+    --color-border: #404040;
+
     /* Progress Indication Dark Theme */
-    --progress-text-color: #94a3b8;
-    --progress-dot-color: #f1f5f9;
+    --progress-text-color: var(--color-gray-500);
+    --progress-dot-color: var(--color-gray-900);
     --progress-dot-filled-opacity: 1;
     --progress-dot-empty-opacity: 0.3;
   }
