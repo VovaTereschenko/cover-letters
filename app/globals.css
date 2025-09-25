@@ -30,12 +30,36 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Spacing System */
+  --spacing-1: 2px; /* 0.125rem */
+  --spacing-2: 4px; /* 0.25rem */
+  --spacing-3: 6px; /* 0.375rem */
+  --spacing-4: 8px; /* 0.5rem */
+  --spacing-6: 12px; /* 0.75rem */
+  --spacing-8: 16px; /* 1rem */
+  --spacing-12: 24px; /* 1.5rem */
+  --spacing-16: 32px; /* 2rem */
+  --spacing-20: 40px; /* 2.5rem */
+  --spacing-24: 48px; /* 3rem */
+
+  /* Progress Indication Theme */
+  --progress-text-color: #667085;
+  --progress-dot-color: #101828;
+  --progress-dot-filled-opacity: 1;
+  --progress-dot-empty-opacity: 0.24;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    /* Progress Indication Dark Theme */
+    --progress-text-color: #94a3b8;
+    --progress-dot-color: #f1f5f9;
+    --progress-dot-filled-opacity: 1;
+    --progress-dot-empty-opacity: 0.3;
   }
 }
 

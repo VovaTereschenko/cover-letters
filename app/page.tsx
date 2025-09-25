@@ -5,7 +5,7 @@ import { ProgressIndication } from "@/components/ProgressIndication/ProgressIndi
 export default function Home() {
   return (
     <div>
-      <ProgressIndication />
+      <ProgressIndication currentStep={1} />
     </div>
   );
 }
