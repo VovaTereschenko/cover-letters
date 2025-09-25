@@ -8,9 +8,9 @@
 
 .text {
   color: var(--progress-text-color);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-sm);
 }
 
 .dotsContainer {
