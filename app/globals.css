@@ -1,3 +1,32 @@
+@font-face {
+  font-family: "Fixel Display";
+  src: url("/fonts/webfonts/FixelDisplay-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fixel Display";
+  src: url("/fonts/webfonts/FixelDisplay-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fixel Text";
+  src: url("/fonts/webfonts/FixelText-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fixel Text";
+  src: url("/fonts/webfonts/FixelText-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -19,7 +48,8 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Fixel Variable", "Fixel Display", "Fixel Text", Arial, Helvetica,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
