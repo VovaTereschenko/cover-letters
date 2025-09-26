@@ -1,3 +1,7 @@
+"use client";
+
+import { JobApplicationLayout } from "@/layouts";
+
 export default function Home() {
-  return <div>Content</div>;
+  return <JobApplicationLayout />;
 }
