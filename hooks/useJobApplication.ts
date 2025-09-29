@@ -244,6 +244,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
         payload: data.coverLetter,
       });
 
+      showToast("Application generated successfully!", "save");
       setTimeout(() => autoSaveApplication(data.coverLetter), 100);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -273,6 +274,7 @@ Your Name`;
         payload: fallbackApplication,
       });
 
+      showToast("Application generated with fallback template", "save");
       setTimeout(() => autoSaveApplication(fallbackApplication), 100);
     } finally {
       dispatch({ type: "SET_IS_GENERATING", payload: false });

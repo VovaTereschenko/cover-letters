@@ -129,6 +129,7 @@ export default function ApplicationCreation({
                 onClick={actions.handleCopyToClipboard}
                 className={styles.copyButton}
                 icon={<CopyIcon />}
+                iconPosition="right"
               >
                 Copy to Clipboard
               </Button>
