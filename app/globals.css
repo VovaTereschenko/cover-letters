@@ -1,7 +1,7 @@
 @font-face {
   font-family: "Fixel Display";
   src: url("/fonts/webfonts/FixelDisplay-Regular.woff2") format("woff2");
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   font-style: normal;
   font-display: swap;
 }
@@ -22,7 +22,7 @@
 @font-face {
   font-family: "Fixel Text";
   src: url("/fonts/webfonts/FixelText-Regular.woff2") format("woff2");
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   font-style: normal;
   font-display: swap;
 }
@@ -50,8 +50,15 @@
   --color-green-600: #087443;
   --color-green-700: #065a35;
   --color-green-800: #044e2d;
+  --color-green-200: #73e2a3;
+  --color-green-100: #d3f8df;
+  --color-red-500: #f04438;
+  --color-red-300: #fda29b;
+  --color-red-100: #fee4e2;
+  --color-red-700: #b42318;
   --color-gray-50: #f9fafb;
   --color-gray-100: #f2f4f7;
+  --color-gray-200: #eaecf0;
   --color-gray-300: #d0d5dd;
   --color-gray-500: #667085;
   --color-gray-600: #475467;
@@ -61,18 +68,37 @@
   --color-gray-400: #98a2b3;
   --color-border: #eaecf0;
 
-  /* Font Weight System */
+  /* Typography */
+  --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
+  --font-weight-semibold: 600;
   --font-weight-bold: 700;
+
+  /* Logo */
+  --logo-text-color: #101828;
 
   /* Font Size System */
   --font-size-xs: 12px;
   --font-size-sm: 14px;
   --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+
+  /* Line Height System */
   --line-height-xs: 18px;
   --line-height-sm: 20px;
+  --line-height-tight: 22px;
   --line-height-base: 24px;
+  --line-height-lg: 28px;
+  --line-height-xl: 32px;
+  --line-height-2xl: 36px;
+  --line-height-3xl: 44px;
+  --line-height-4xl: 60px;
 
   /* Shadow System */
   --shadow-xs: 0px 1px 2px rgba(16, 24, 40, 0.03);
@@ -86,12 +112,53 @@
   --spacing-4: 8px; /* 0.5rem */
   --spacing-6: 12px; /* 0.75rem */
   --spacing-8: 16px; /* 1rem */
+  --spacing-10: 20px; /* 1.25rem */
   --spacing-12: 24px; /* 1.5rem */
+  --spacing-14: 28px; /* 1.75rem */
   --spacing-16: 32px; /* 2rem */
+  --spacing-18: 36px; /* 2.25rem */
   --spacing-20: 40px; /* 2.5rem */
+  --spacing-22: 22px; /* 1.375rem */
   --spacing-24: 48px; /* 3rem */
+  --spacing-28: 56px; /* 3.5rem */
+  --spacing-32: 64px; /* 4rem */
+  --spacing-36: 36px; /* 2.25rem */
+  --spacing-40: 80px; /* 5rem */
+  --spacing-44: 44px; /* 2.75rem */
+  --spacing-48: 96px; /* 6rem */
+  --spacing-60: 120px; /* 7.5rem */
 
-  /* Progress Indication Theme */
+  --modal-width-sm: 400px;
+  --modal-width-md: 600px;
+  --modal-width-lg: 800px;
+  --modal-width-xs: 320px;
+  --layout-max-width: 1120px;
+  --panel-width: 544px;
+  --card-min-height: 280px;
+  --textarea-min-height: 120px;
+  --button-height-sm: 36px;
+  --button-height-md: 44px;
+  --button-height-lg: 60px;
+  --icon-size-sm: 32px;
+  --icon-size-md: 40px;
+  --icon-size-lg: 48px;
+  --header-height: 72px;
+  --header-height-mobile: 64px;
+  --card-content-max-height: 240px;
+  --card-content-max-height-mobile: 180px;
+  --card-content-max-height-small: 140px;
+  --sidebar-min-height: 300px;
+  --sidebar-min-height-mobile: 250px;
+  --sidebar-min-height-small: 200px;
+
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+
+  --logo-width-mobile: 120px;
+  --logo-height-mobile: 32px;
+
   --progress-text-color: var(--color-gray-500);
   --progress-dot-color: var(--color-gray-900);
   --progress-dot-filled-opacity: 1;
@@ -105,6 +172,8 @@
 
     /* Color System Dark Mode */
     --color-white: #0a0a0a;
+    --color-green-100: #1a4d2e;
+    --color-red-100: #4a1a1a;
     --color-gray-50: #1a1a1a;
     --color-gray-100: #262626;
     --color-gray-300: #404040;
@@ -120,6 +189,9 @@
     --progress-dot-color: var(--color-gray-900);
     --progress-dot-filled-opacity: 1;
     --progress-dot-empty-opacity: 0.3;
+
+    /* Logo Dark Mode */
+    --logo-text-color: #ffffff;
   }
 }
 
@@ -152,5 +224,38 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  * {
+    touch-action: manipulation;
+  }
+
+  button,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 13px;
+  }
+
+  button,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 40px;
   }
 }

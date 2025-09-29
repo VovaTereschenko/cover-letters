@@ -1,4 +1,10 @@
 export { CheckmarkIcon } from "./CheckmarkIcon";
+export { CheckmarkLargeIcon } from "./CheckmarkLargeIcon";
+export { CloseIcon } from "./CloseIcon";
+export { CopyIcon } from "./CopyIcon";
+export { DeleteIcon } from "./DeleteIcon";
 export { HomeIcon } from "./HomeIcon";
+export { PlusIcon } from "./PlusIcon";
+export { RefreshIcon } from "./RefreshIcon";
 export { Spinner } from "./Spinner";
 export { Logo } from "./Logo";

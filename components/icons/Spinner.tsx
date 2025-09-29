@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import styles from "./Spinner.module.css";
 
 type SpinnerProps = {
@@ -13,7 +14,7 @@ const Spinner = ({
   className,
 }: SpinnerProps) => (
   <svg
-    className={`${styles.spinner} ${className || ""}`}
+    className={classNames(styles.spinner, className)}
     width={size}
     height={size}
     viewBox="0 0 24 24"

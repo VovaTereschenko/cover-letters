@@ -1,8 +1,6 @@
-// Client Components
-export { Button } from "./Button";
-export { IconButton } from "./IconButton";
-export { Header } from "./Header/Header";
+export { Button } from "./shared/Button";
+export { IconButton } from "./shared/IconButton";
+export { Header } from "./headers/Header/Header";
 
-// Server Components
-export { ProgressIndication } from "./ProgressIndication/ProgressIndication";
+export { ProgressIndication } from "./shared/ProgressIndication/ProgressIndication";
 export * from "./icons";

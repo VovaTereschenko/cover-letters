@@ -1,6 +1,6 @@
 import React from "react";
 
-export const CopyIcon = () => (
+const CopyIcon = () => (
   <svg
     width="20"
     height="20"
@@ -17,3 +17,5 @@ export const CopyIcon = () => (
     />
   </svg>
 );
+
+export { CopyIcon };

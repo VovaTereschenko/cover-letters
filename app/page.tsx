@@ -1,7 +1,14 @@
 "use client";
 
-import { JobApplicationLayout } from "@/layouts";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return <JobApplicationLayout />;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/applications");
+  }, [router]);
+
+  return null;
 }

@@ -1,0 +1,141 @@
+.applicationCard {
+  background-color: var(--color-gray-50);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid transparent;
+  min-height: var(--card-min-height);
+}
+
+.applicationCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.cardContent {
+  padding: var(--spacing-12);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardText {
+  font-family: "Fixel Text", sans-serif;
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  color: var(--color-gray-500);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  flex: 1;
+  overflow: hidden;
+  max-height: var(--card-content-max-height);
+  position: relative;
+  padding-bottom: var(--spacing-60);
+}
+
+.cardActions {
+  background: linear-gradient(
+    rgb(249 250 251 / 18%) 0%,
+    rgb(249 250 251) 40%,
+    var(--color-gray-50) 100%
+  );
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-8);
+  padding: var(--spacing-16) 0 var(--spacing-4);
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .cardActions {
+    background: linear-gradient(
+      rgb(26 26 26 / 18%) 0%,
+      rgb(26 26 26) 40%,
+      var(--color-gray-50) 100%
+    );
+  }
+}
+
+/* Placeholder/Skeleton styles */
+.placeholder {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+  padding-top: var(--spacing-4);
+}
+
+.skeletonLine {
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--border-radius-sm);
+  width: 100%;
+}
+
+.skeletonLineShort {
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--border-radius-sm);
+  width: 60%;
+}
+
+.contentSkeleton {
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .applicationCard {
+    min-height: var(--card-content-max-height);
+  }
+
+  .cardContent {
+    padding: var(--spacing-8);
+  }
+
+  .cardText {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    max-height: var(--card-content-max-height-mobile);
+    padding-bottom: 50px;
+  }
+
+  .cardActions {
+    padding: var(--spacing-12) var(--spacing-6) var(--spacing-4);
+    gap: var(--spacing-6);
+  }
+}
+
+@media (max-width: 480px) {
+  .applicationCard {
+    min-height: var(--sidebar-min-height-small);
+  }
+
+  .cardContent {
+    padding: var(--spacing-6);
+  }
+
+  .cardText {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-tight);
+    max-height: var(--card-content-max-height-small);
+    padding-bottom: 45px;
+  }
+
+  .cardActions {
+    padding: var(--spacing-12) var(--spacing-4) var(--spacing-3);
+    gap: var(--spacing-4);
+  }
+}
