@@ -7,8 +7,13 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "type-check": "tsc --noEmit",
+    "export": "next export",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "classnames": "^2.5.1",

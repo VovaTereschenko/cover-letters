@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "env": {
+    "OPENAI_API_KEY": "@openai_api_key"
+  },
+  "functions": {
+    "app/api/generate-cover-letter/route.ts": {
+      "maxDuration": 30
+    }
+  }
+}
