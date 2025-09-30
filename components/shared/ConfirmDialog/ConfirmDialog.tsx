@@ -44,7 +44,7 @@ const ConfirmDialog = ({
       showCloseButton={false}
       footer={footer}
     >
-      <p className={styles.message}>{message}</p>
+      <p className="description-medium text-secondary">{message}</p>
     </Modal>
   );
 };

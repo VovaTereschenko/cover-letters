@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import classNames from "classnames";
 import { TextField } from "@/components/shared/TextField";
 import { Button } from "@/components/shared/Button";
 import { CopyIcon, RefreshIcon } from "@/components/icons";
@@ -111,13 +112,25 @@ export default function ApplicationCreation({
         <section className={styles.rightPanel}>
           <article className={styles.contentArea}>
             {state.generatedApplication ? (
-              <pre className={styles.applicationText}>
+              <pre
+                className={classNames(
+                  styles.applicationText,
+                  "description-large",
+                  "text-secondary"
+                )}
+              >
                 {state.generatedApplication}
               </pre>
             ) : state.isGenerating ? (
               <LoadingAnimation />
             ) : (
-              <div className={styles.placeholder}>
+              <div
+                className={classNames(
+                  styles.placeholder,
+                  "description-large",
+                  "text-secondary"
+                )}
+              >
                 Your personalized job application will appear here...
               </div>
             )}

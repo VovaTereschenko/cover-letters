@@ -45,10 +45,6 @@
 }
 
 .message {
-  font-family: "Fixel Text", sans-serif;
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  color: var(--color-gray-600);
   margin: var(--spacing-16) 0 0;
 }
 

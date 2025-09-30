@@ -49,7 +49,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-12) var(--spacing-12) var(--spacing-8)
+  padding: var(--spacing-12) var(--spacing-12) var(--spacing-4)
     var(--spacing-12);
 }
 
@@ -64,19 +64,19 @@
 
 .closeButton {
   color: var(--color-gray-500);
-  padding: var(--spacing-4) !important;
-  min-width: auto !important;
+  padding: var(--spacing-4);
+  min-width: auto;
 }
 
 .closeButton:hover {
   color: var(--color-gray-700);
-  background-color: var(--color-gray-100) !important;
+  background-color: var(--color-gray-100);
 }
 
 @media (prefers-color-scheme: dark) {
   .closeButton:hover {
     color: var(--color-gray-600);
-    background-color: var(--color-gray-100) !important;
+    background-color: var(--color-gray-100);
   }
 }
 
@@ -150,7 +150,7 @@
   }
 
   .closeButton {
-    padding: var(--spacing-2) !important;
+    padding: var(--spacing-2);
     margin: calc(-1 * var(--spacing-1));
   }
 

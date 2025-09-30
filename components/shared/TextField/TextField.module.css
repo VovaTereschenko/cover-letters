@@ -14,14 +14,6 @@
   min-height: 0;
 }
 
-.label {
-  font-family: "Fixel Text", sans-serif;
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
-  color: var(--color-gray-700);
-}
-
 .required {
   color: var(--color-red-500);
   margin-left: var(--spacing-1);
@@ -31,14 +23,10 @@
   padding: var(--spacing-4) var(--spacing-6);
   border: 1px solid var(--color-gray-300);
   border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-regular);
-  line-height: 1.5;
   color: var(--color-gray-900);
   background-color: var(--color-white);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   box-shadow: var(--shadow-xs);
-  font-family: "Fixel Text", sans-serif;
   height: var(--spacing-20);
   box-sizing: border-box;
   outline: none;

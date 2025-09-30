@@ -1,5 +1,6 @@
 import { Button } from "@/components/shared/Button";
 import { CopyIcon, DeleteIcon } from "@/components/icons";
+import classNames from "classnames";
 import styles from "./ApplicationCard.module.css";
 
 type ApplicationCardProps = {
@@ -19,7 +20,9 @@ export function ApplicationCard({
 }: ApplicationCardProps) {
   if (isPlaceholder) {
     return (
-      <article className={`${styles.applicationCard} ${styles.placeholder}`}>
+      <article
+        className={classNames(styles.applicationCard, styles.placeholder)}
+      >
         <section className={styles.cardContent}>
           <div className={styles.cardText}>
             <div className={styles.skeletonLines}>
@@ -64,7 +67,15 @@ export function ApplicationCard({
       tabIndex={0}
     >
       <section className={styles.cardContent}>
-        <p className={styles.cardText}>{content}</p>
+        <p
+          className={classNames(
+            styles.cardText,
+            "description-large",
+            "text-secondary"
+          )}
+        >
+          {content}
+        </p>
       </section>
       <footer className={styles.cardActions}>
         <Button

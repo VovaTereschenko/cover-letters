@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import styles from "./Toast.module.css";
 
 type ToastProps = {
@@ -12,8 +13,18 @@ const Toast: React.FC<ToastProps> = ({ message, isVisible, show }) => {
   if (!isVisible) return null;
 
   return (
-    <div className={`${styles.toast} ${show ? styles.show : styles.hide}`}>
-      <span className={styles.message}>{message}</span>
+    <div
+      className={classNames(styles.toast, {
+        [styles.show]: show,
+        [styles.hide]: !show,
+      })}
+    >
+      <span
+        className={classNames("description-small")}
+        style={{ fontWeight: "var(--font-weight-medium)", color: "white" }}
+      >
+        {message}
+      </span>
     </div>
   );
 };

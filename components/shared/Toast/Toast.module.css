@@ -7,10 +7,6 @@
   color: white;
   padding: var(--spacing-3) var(--spacing-20);
   border-radius: var(--border-radius-md);
-  font-family: "Fixel Text", sans-serif;
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-sm);
   box-shadow: 0 10px 25px rgba(16, 24, 40, 0.25);
   z-index: 1000;
   opacity: 0;

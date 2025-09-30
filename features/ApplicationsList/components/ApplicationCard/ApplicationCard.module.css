@@ -24,11 +24,6 @@
 }
 
 .cardText {
-  font-family: "Fixel Text", sans-serif;
-  font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-lg);
-  color: var(--color-gray-500);
   white-space: pre-wrap;
   word-wrap: break-word;
   flex: 1;

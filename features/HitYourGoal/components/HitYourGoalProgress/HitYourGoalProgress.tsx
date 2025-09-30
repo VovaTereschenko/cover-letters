@@ -28,7 +28,16 @@ const HitYourGoalProgress: React.FC<HitYourGoalProgressProps> = ({
           />
         ))}
       </div>
-      <span className={styles.text}>{explanatoryText}</span>
+      <span
+        className={classNames(
+          styles.text,
+          "description-small",
+          "text-secondary"
+        )}
+        style={{ fontWeight: "var(--font-weight-medium)" }}
+      >
+        {explanatoryText}
+      </span>
     </div>
   );
 };

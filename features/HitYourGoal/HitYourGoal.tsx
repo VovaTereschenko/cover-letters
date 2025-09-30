@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import { HitYourGoalProgress } from "./components";
 import { Button } from "@/components/shared/Button";
 import { PlusIcon } from "@/components/icons";
@@ -22,7 +23,13 @@ export const HitYourGoal: React.FC<HitYourGoalProps> = ({
       <article className={styles.content}>
         <header>
           <h2 className="title-primary text-center">Hit your goal</h2>
-          <p className={`${styles.description} description-large text-center`}>
+          <p
+            className={classNames(
+              styles.description,
+              "description-large",
+              "text-center"
+            )}
+          >
             Generate and send out couple more job applications <br /> today to
             get hired faster
           </p>

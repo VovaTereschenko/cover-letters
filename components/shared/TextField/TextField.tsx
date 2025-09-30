@@ -96,7 +96,14 @@ const TextField = forwardRef<
 
     return (
       <div className={containerClasses}>
-        <label htmlFor={fieldId} className={styles.label}>
+        <label
+          htmlFor={fieldId}
+          className={classNames("description-small", "text-primary")}
+          style={{
+            fontWeight: "var(--font-weight-medium)",
+            color: "var(--color-gray-700)",
+          }}
+        >
           {label}
           {required && <span className={styles.required}>*</span>}
         </label>
@@ -107,7 +114,7 @@ const TextField = forwardRef<
             id={fieldId}
             name={name}
             type={(rest as InputProps).type || "text"}
-            className={fieldClasses}
+            className={classNames(fieldClasses, "description-medium")}
             placeholder={placeholder}
             value={value}
             onChange={handleChange}
@@ -121,7 +128,7 @@ const TextField = forwardRef<
             ref={ref as React.Ref<HTMLTextAreaElement>}
             id={fieldId}
             name={name}
-            className={fieldClasses}
+            className={classNames(fieldClasses, "description-medium")}
             placeholder={placeholder}
             value={value}
             onChange={handleChange}

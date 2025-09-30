@@ -1,12 +1,3 @@
-.message {
-  font-family: "Fixel Text", sans-serif;
-  font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  color: var(--color-gray-600);
-  margin: 0;
-}
-
 .actions {
   display: flex;
   justify-content: flex-end;
