@@ -15,6 +15,7 @@ type ButtonProps = {
   disabled?: boolean;
   loading?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   className?: string;
   type?: "button" | "submit" | "reset";
   icon?: React.ReactNode;
@@ -28,6 +29,7 @@ const Button = ({
   disabled = false,
   loading = false,
   onClick,
+  onKeyDown,
   className,
   type = "button",
   icon,
@@ -36,6 +38,7 @@ const Button = ({
   <button
     type={type}
     onClick={onClick}
+    onKeyDown={onKeyDown}
     disabled={disabled || loading}
     className={classNames(
       styles.button,

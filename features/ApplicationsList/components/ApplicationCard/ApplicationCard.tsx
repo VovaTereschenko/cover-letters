@@ -81,6 +81,10 @@ export function ApplicationCard({
         <Button
           variant="text"
           icon={<DeleteIcon />}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
@@ -94,6 +98,10 @@ export function ApplicationCard({
           onClick={(e) => {
             e.stopPropagation();
             onCopy();
+          }}
+          onKeyDown={(e) => {
+            e.stopPropagation();
+            onDelete();
           }}
           iconPosition="right"
         >
