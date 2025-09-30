@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import classNames from "classnames";
 import { TextField } from "@/components/shared/TextField";
 import { Button } from "@/components/shared/Button";
 import { CopyIcon, RefreshIcon } from "@/components/icons";
-import { LoadingAnimation } from "./components";
+import { ContentArea } from "./components";
 import { HitYourGoal } from "@/features/HitYourGoal";
 import { useJobApplication } from "@/features/ApplicationCreation/hooks/useJobApplication";
 import { UI_MESSAGES } from "@/constants/ai";
@@ -116,29 +115,10 @@ export default function ApplicationCreation({
 
         <section className={styles.rightPanel}>
           <article className={styles.contentArea}>
-            {state.generatedApplication ? (
-              <pre
-                className={classNames(
-                  styles.applicationText,
-                  "description-large",
-                  "text-secondary"
-                )}
-              >
-                {state.generatedApplication}
-              </pre>
-            ) : state.isGenerating ? (
-              <LoadingAnimation />
-            ) : (
-              <div
-                className={classNames(
-                  styles.placeholder,
-                  "description-large",
-                  "text-secondary"
-                )}
-              >
-                {UI_MESSAGES.placeholders.applicationPreview}
-              </div>
-            )}
+            <ContentArea
+              generatedApplication={state.generatedApplication}
+              isGenerating={state.isGenerating}
+            />
           </article>
           {state.generatedApplication && (
             <footer className={styles.copyButtonContainer}>
