@@ -11,7 +11,7 @@ const SubHeader: React.FC<SubHeaderProps> = ({ onCreateNew }) => {
   return (
     <section className={styles.subHeader}>
       <header>
-        <h1 className={styles.title}>Applications</h1>
+        <h1 className="title-hero">Applications</h1>
       </header>
       <nav>
         <Button

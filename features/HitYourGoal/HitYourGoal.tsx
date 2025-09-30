@@ -21,8 +21,8 @@ export const HitYourGoal: React.FC<HitYourGoalProps> = ({
     <section className={styles.container}>
       <article className={styles.content}>
         <header>
-          <h2 className={styles.title}>Hit your goal</h2>
-          <p className={styles.description}>
+          <h2 className="title-primary text-center">Hit your goal</h2>
+          <p className={`${styles.description} description-large text-center`}>
             Generate and send out couple more job applications <br /> today to
             get hired faster
           </p>

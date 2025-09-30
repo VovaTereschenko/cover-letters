@@ -26,10 +26,10 @@ const ConfirmDialog = ({
 }: ConfirmDialogProps) => {
   const footer = (
     <div className={styles.actions}>
-      <Button variant="outlined" onClick={onCancel}>
+      <Button size="small" variant="outlined" onClick={onCancel}>
         {cancelText}
       </Button>
-      <Button variant="primary" onClick={onConfirm}>
+      <Button size="small" variant="primary" onClick={onConfirm}>
         {confirmText}
       </Button>
     </div>

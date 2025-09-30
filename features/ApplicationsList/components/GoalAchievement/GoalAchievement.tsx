@@ -48,7 +48,7 @@ const GoalAchievement = ({ isVisible, onClose }: GoalAchievementProps) => {
         <div className={styles.iconContainer}>
           <CheckmarkLargeIcon />
         </div>
-        <h2 className={styles.title}>Goal Achieved!</h2>
+        <h2 className="title-tertiary">Goal Achieved!</h2>
         <p className={styles.message}>
           Congratulations! You&apos;ve completed 5 applications.
         </p>

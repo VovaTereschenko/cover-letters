@@ -160,9 +160,9 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
   const getTitleClassName = (styles: Record<string, string>) => {
     if (state.titleText === "New application") {
-      return `${styles.title} ${styles.titlePlaceholder}`;
+      return `title-primary ${styles.title} ${styles.titlePlaceholder}`;
     }
-    return styles.title;
+    return `title-primary ${styles.title}`;
   };
 
   const isGenerateDisabled = () => {

@@ -92,7 +92,7 @@ const Modal = ({
         {(title || showCloseButton) && (
           <header className={styles.header}>
             {title && (
-              <h2 id="modal-title" className={styles.title}>
+              <h2 id="modal-title" className="title-tertiary">
                 {title}
               </h2>
             )}

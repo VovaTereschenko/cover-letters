@@ -76,8 +76,8 @@ export function ApplicationsList({
         isOpen={state.showDeleteConfirm}
         title="Delete Application"
         message="Are you sure you want to delete this application? This action cannot be undone."
-        confirmText="Yes"
-        cancelText="No"
+        confirmText="Yes, delete"
+        cancelText="No, keep"
         onConfirm={actions.handleDeleteConfirm}
         onCancel={actions.handleDeleteCancel}
       />
