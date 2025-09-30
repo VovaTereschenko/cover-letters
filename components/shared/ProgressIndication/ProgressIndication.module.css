@@ -1,9 +1,7 @@
 .container {
   display: flex;
   align-items: center;
-  gap: var(--spacing-8); /* 16px */
-  font-family: "Fixel Variable", "Fixel Display", "Fixel Text", Arial, Helvetica,
-    sans-serif;
+  gap: var(--spacing-8);
   transition: background-color 0.3s ease;
   border-radius: var(--border-radius-md);
   padding: var(--spacing-2) var(--spacing-4);
@@ -13,8 +11,16 @@
   background: var(--color-green-100);
 }
 
+.container.highlighted > * {
+  color: var(--color-green-600);
+}
+
 .container.highlightedRed {
   background: var(--color-red-100);
+}
+
+.container.highlightedRed > * {
+  color: var(--color-red-700);
 }
 
 .text {

@@ -53,15 +53,6 @@
     var(--spacing-12);
 }
 
-.title {
-  font-family: "Fixel Display", sans-serif;
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-2xl);
-  line-height: var(--line-height-xl);
-  margin: 0;
-  color: var(--color-gray-900);
-}
-
 .closeButton {
   color: var(--color-gray-500);
   padding: var(--spacing-4);
