@@ -56,7 +56,7 @@
 > - **SSR**
 > - **Мобильная версия**
 >
-> ![Mobile Version](public/readme-content/mobile-1.png) > ![Mobile Version](public/readme-content/mobile-2.png) > ![Mobile Version](public/readme-content/mobile-3.png)
+> <img src="public/readme-content/mobile-1.png" width="300" /> <img src="public/readme-content/mobile-2.png" width="300" /> <img src="public/readme-content/mobile-3.png" width="300" />
 
 > - **Нотификации через Toast компонент** – без них как-то непонятно, завершено ли действие с успехом.
 > - **Темная тема**, которая включается при соответствующих настройках компьютера.
