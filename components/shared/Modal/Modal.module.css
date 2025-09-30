@@ -19,8 +19,7 @@
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--modal-shadow);
   border: 1px solid var(--color-gray-200);
 }
 
@@ -28,8 +27,7 @@
   .modal {
     background: var(--color-gray-50);
     border: 1px solid var(--color-gray-300);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4),
-      0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--modal-shadow-dark);
   }
 }
 

@@ -7,7 +7,7 @@
   color: white;
   padding: var(--spacing-3) var(--spacing-20);
   border-radius: var(--border-radius-md);
-  box-shadow: 0 10px 25px rgba(16, 24, 40, 0.25);
+  box-shadow: var(--toast-shadow);
   z-index: 1000;
   opacity: 0;
   transition: all 0.3s ease-out;

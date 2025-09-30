@@ -17,7 +17,10 @@
       rgba(255, 255, 255, 0.16) 100%
     ),
     radial-gradient(100% 100% at 0% 0%, #ffffff 0%, #d0d5dd 100%);
-  box-shadow: inset 0px -2px 32px rgba(16, 24, 40, 0.08);
+  background: var(--color-gray-100);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--loading-animation-shadow);
+  position: relative;
   animation: float 2s ease-in-out infinite;
 }
 
