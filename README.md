@@ -11,7 +11,7 @@
 > - Есть места, где можно было лучше обойтись с версткой, например в features/HitYourGoal/components/HitYourGoalProgress/HitYourGoalProgress.tsx. Похожая верстка в components/shared/ProgressIndication/ProgressIndication.tsx сделана семантичнее.
 > - Некоторые кастомные компоненты сделал бы изначально генерализовыннм (например, HitYourGoal сделал бы найстрокой ком-та Banner).
 > - Тесы фичей. Пока сделаны тесты только на shared компоненты – просто для примера.
-> - Назвал бы через константу какие-нибудь сложные кондишены вроде {initialApplications.length > 0 && (state.applications.length > 0 || !state.isHydrated).
+> - ~~Назвал бы через константу какие-нибудь сложные кондишены вроде {initialApplications.length > 0 && (state.applications.length > 0 || !state.isHydrated).~~
 > - Где-то есть трехэтажный тернарник – его бы тоже поправил.
 > - ~~Захардкоженый текст вынес бы в константы аля i18n или просто в .ts файл, если не нужен перевод.~~
 > - ~~Дублирующиеся типы (SavedApplication и др.) вынес бы в types/index.ts.~~

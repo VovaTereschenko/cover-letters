@@ -95,6 +95,7 @@
 .text {
   background-color: transparent;
   color: var(--color-gray-600);
+  font-weight: var(--font-weight-semibold);
   border: none;
   filter: none;
 }
