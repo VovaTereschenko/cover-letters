@@ -25,7 +25,7 @@ export const UI_MESSAGES = {
     generating: "Generating...",
     generateNow: "Generate Now",
     generateNext: "Generate Next",
-    tryAgain: "Try Again",
+    tryAgain: "Erase & Try Again",
   },
   toasts: {
     generatedSuccessfully: "Application generated successfully!",
