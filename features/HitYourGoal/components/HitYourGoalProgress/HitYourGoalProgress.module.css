@@ -12,9 +12,9 @@
 }
 
 .dot {
-  width: var(--spacing-16); /* 32px */
-  height: var(--spacing-4); /* 8px */
-  border-radius: var(--border-radius-sm); /* 4px */
+  width: var(--spacing-16);
+  height: var(--spacing-4);
+  border-radius: var(--border-radius-sm);
   background-color: var(--color-gray-900);
   transition: opacity 0.2s ease;
 }

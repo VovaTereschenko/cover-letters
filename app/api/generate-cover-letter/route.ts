@@ -5,8 +5,14 @@ import {
   VALIDATION_LIMITS,
   ERROR_MESSAGES,
   AI_PROMPTS,
-  type CoverLetterRequest,
 } from "@/constants/ai";
+
+type CoverLetterRequest = {
+  jobTitle: string;
+  company: string;
+  skills: string;
+  additionalDetails: string;
+};
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

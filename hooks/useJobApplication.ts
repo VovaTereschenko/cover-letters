@@ -193,13 +193,17 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
       const updatedApplications =
         localStorageService.addApplication(application);
+
       dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: application.id });
+
       const previousCount = state.applicationsCount;
+
       dispatch({
         type: "SET_APPLICATIONS_COUNT",
         payload: updatedApplications.length,
       });
 
+      // to show "You've just reached the goal" dialog on the applications page
       if (updatedApplications.length === 5 && previousCount < 5) {
         sessionStorage.setItem("justReached5Applications", "true");
       }
@@ -239,6 +243,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       }
 
       const data = await response.json();
+
       dispatch({
         type: "SET_GENERATED_APPLICATION",
         payload: data.coverLetter,

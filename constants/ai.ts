@@ -62,10 +62,3 @@ IMPORTANT:
 - Maximum 1000 characters (keep it very concise)
 - Make it specific to MY information and this ${jobTitle} role`,
 } as const;
-
-export type CoverLetterRequest = {
-  jobTitle: string;
-  company: string;
-  skills: string;
-  additionalDetails: string;
-};
