@@ -19,10 +19,7 @@ const Toast: React.FC<ToastProps> = ({ message, isVisible, show }) => {
         [styles.hide]: !show,
       })}
     >
-      <span
-        className={classNames("description-small")}
-        style={{ fontWeight: "var(--font-weight-medium)", color: "white" }}
-      >
+      <span className={classNames(styles.message, "description-small")}>
         {message}
       </span>
     </div>

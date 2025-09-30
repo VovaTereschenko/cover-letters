@@ -3,6 +3,7 @@ import classNames from "classnames";
 import { HitYourGoalProgress } from "./components";
 import { Button } from "@/components/shared/Button";
 import { PlusIcon } from "@/components/icons";
+import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 import styles from "./HitYourGoal.module.css";
 
 type HitYourGoalProps = {
@@ -14,7 +15,7 @@ export const HitYourGoal: React.FC<HitYourGoalProps> = ({
   onCreateNew,
   applicationsCount = 0,
 }) => {
-  if (applicationsCount >= 5) {
+  if (applicationsCount >= RECOMMENDED_AMOUNT_OF_APPLICATIONS) {
     return null;
   }
 

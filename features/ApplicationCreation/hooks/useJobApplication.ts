@@ -3,6 +3,7 @@ import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
 import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
 import { ProgressHighlightColor } from "@/types";
+import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 
 type JobApplicationState = {
   jobTitle: string;
@@ -205,7 +206,10 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       });
 
       // to show "You've just reached the goal" dialog on the applications page
-      if (updatedApplications.length === 5 && previousCount < 5) {
+      if (
+        updatedApplications.length === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
+        previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
+      ) {
         sessionStorage.setItem("justReached5Applications", "true");
       }
 

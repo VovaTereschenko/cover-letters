@@ -25,6 +25,8 @@
 
 .message {
   display: block;
+  font-weight: var(--font-weight-medium);
+  color: white;
 }
 
 @media (max-width: 768px) {

@@ -17,24 +17,36 @@ const HitYourGoalProgress: React.FC<HitYourGoalProgressProps> = ({
 
   return (
     <div className={styles.container}>
-      <div className={styles.dotsContainer}>
+      <ol
+        className={styles.dotsContainer}
+        role="progressbar"
+        aria-valuenow={progress}
+        aria-valuemin={0}
+        aria-valuemax={totalSteps}
+        aria-label={`Progress: ${progress} out of ${totalSteps} applications completed`}
+      >
         {Array.from({ length: totalSteps }, (_, index) => (
-          <div
+          <li
             key={index}
             className={classNames(styles.dot, {
               [styles.filled]: index < progress,
               [styles.empty]: index >= progress,
             })}
-          />
+            aria-hidden="true"
+          >
+            <span className={styles.hiddenText}>
+              {index < progress ? "Completed" : "Not completed"}
+            </span>
+          </li>
         ))}
-      </div>
+      </ol>
       <span
         className={classNames(
           styles.text,
           "description-small",
           "text-secondary"
         )}
-        style={{ fontWeight: "var(--font-weight-medium)" }}
+        aria-live="polite"
       >
         {explanatoryText}
       </span>

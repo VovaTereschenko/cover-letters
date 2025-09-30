@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import { CheckmarkLargeIcon } from "@/components/icons";
+import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 import styles from "./GoalAchievement.module.css";
 
 type GoalAchievementProps = {
@@ -56,7 +57,8 @@ const GoalAchievement = ({ isVisible, onClose }: GoalAchievementProps) => {
             "text-secondary"
           )}
         >
-          Congratulations! You&apos;ve completed 5 applications.
+          Congratulations! You&apos;ve completed{" "}
+          {RECOMMENDED_AMOUNT_OF_APPLICATIONS} applications.
         </p>
       </div>
     </div>

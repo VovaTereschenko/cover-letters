@@ -98,11 +98,11 @@ const TextField = forwardRef<
       <div className={containerClasses}>
         <label
           htmlFor={fieldId}
-          className={classNames("description-small", "text-primary")}
-          style={{
-            fontWeight: "var(--font-weight-medium)",
-            color: "var(--color-gray-700)",
-          }}
+          className={classNames(
+            styles.label,
+            "description-small",
+            "text-primary"
+          )}
         >
           {label}
           {required && <span className={styles.required}>*</span>}

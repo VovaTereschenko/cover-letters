@@ -3,6 +3,7 @@ import { useApplicationsCount } from "@/contexts/ApplicationsCountContext";
 import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
 import { SavedApplication } from "@/types";
+import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 
 type ApplicationsState = {
   applications: SavedApplication[];
@@ -116,7 +117,10 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
   }, [initialApplications, setApplicationsCount]);
 
   useEffect(() => {
-    if (state.applications.length === 5 && state.previousCount < 5) {
+    if (
+      state.applications.length === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
+      state.previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
+    ) {
       dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
     }
     dispatch({
@@ -129,7 +133,10 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
     const justReached5 =
       sessionStorage.getItem("justReached5Applications") === "true";
 
-    if (initialApplications.length >= 5 && justReached5) {
+    if (
+      initialApplications.length >= RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
+      justReached5
+    ) {
       const timer = setTimeout(() => {
         dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
         sessionStorage.removeItem("justReached5Applications");

@@ -14,6 +14,11 @@
   min-height: 0;
 }
 
+.label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+}
+
 .required {
   color: var(--color-red-500);
   margin-left: var(--spacing-1);
