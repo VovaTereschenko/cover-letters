@@ -66,17 +66,24 @@ export function ApplicationCard({
       <section className={styles.cardContent}>
         <p className={styles.cardText}>{content}</p>
       </section>
-      <footer
-        className={styles.cardActions}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Button variant="text" icon={<DeleteIcon />} onClick={onDelete}>
+      <footer className={styles.cardActions}>
+        <Button
+          variant="text"
+          icon={<DeleteIcon />}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+        >
           Delete
         </Button>
         <Button
           variant="text"
           icon={<CopyIcon />}
-          onClick={onCopy}
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy();
+          }}
           iconPosition="right"
         >
           Copy to clipboard
