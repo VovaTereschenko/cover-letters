@@ -19,9 +19,7 @@ const Toast: React.FC<ToastProps> = ({ message, isVisible, show }) => {
         [styles.hide]: !show,
       })}
     >
-      <span className={classNames(styles.message, "description-small")}>
-        {message}
-      </span>
+      <span className={classNames(styles.message)}>{message}</span>
     </div>
   );
 };
