@@ -54,6 +54,10 @@
 **Дополнительный функционал:**
 
 > - **SSR**
+> - **Мобильная версия**
+>
+> ![Mobile Version](public/readme-content/mobile-1.png) > ![Mobile Version](public/readme-content/mobile-2.png) > ![Mobile Version](public/readme-content/mobile-3.png)
+
 > - **Нотификации через Toast компонент** – без них как-то непонятно, завершено ли действие с успехом.
 > - **Темная тема**, которая включается при соответствующих настройках компьютера.
 >
