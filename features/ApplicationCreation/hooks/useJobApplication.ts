@@ -4,6 +4,11 @@ import { localStorageService } from "@/lib/localStorage";
 import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
 import { ProgressHighlightColor } from "@/types";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
+import {
+  validateField,
+  validateJobApplicationForm,
+  type JobApplicationFormData,
+} from "@/lib/validations";
 
 function assertNever(value: never): never {
   throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
@@ -21,6 +26,7 @@ type JobApplicationState = {
   savedApplicationId: string;
   isCountLoaded: boolean;
   progressHighlightColor?: ProgressHighlightColor;
+  validationErrors: Partial<Record<keyof JobApplicationFormData, string>>;
 };
 
 type JobApplicationAction =
@@ -38,6 +44,11 @@ type JobApplicationAction =
       type: "SET_PROGRESS_HIGHLIGHT_COLOR";
       payload: ProgressHighlightColor;
     }
+  | {
+      type: "SET_VALIDATION_ERRORS";
+      payload: Partial<Record<keyof JobApplicationFormData, string>>;
+    }
+  | { type: "CLEAR_VALIDATION_ERROR"; payload: keyof JobApplicationFormData }
   | { type: "RESET_FORM" }
   | { type: "CLEAR_FORM_ONLY" };
 
@@ -77,16 +88,28 @@ function jobApplicationReducer(
       return { ...state, isCountLoaded: action.payload };
     case "SET_PROGRESS_HIGHLIGHT_COLOR":
       return { ...state, progressHighlightColor: action.payload };
+    case "SET_VALIDATION_ERRORS":
+      return { ...state, validationErrors: action.payload };
+    case "CLEAR_VALIDATION_ERROR":
+      return {
+        ...state,
+        validationErrors: {
+          ...state.validationErrors,
+          [action.payload]: undefined,
+        },
+      };
     case "RESET_FORM":
       return {
         ...state,
         ...EMPTY_FORM,
+        validationErrors: {},
       };
     case "CLEAR_FORM_ONLY":
       return {
         ...state,
         ...EMPTY_FORM,
         savedApplicationId: "",
+        validationErrors: {},
       };
     default:
       return assertNever(action);
@@ -106,6 +129,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     savedApplicationId: "",
     isCountLoaded: true,
     progressHighlightColor: undefined,
+    validationErrors: {},
   };
 
   const [state, dispatch] = useReducer(jobApplicationReducer, initialState);
@@ -173,14 +197,15 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   };
 
   const isGenerateDisabled = () => {
-    return (
-      !state.jobTitle.trim() ||
-      !state.company.trim() ||
-      !state.skills.trim() ||
-      !state.additionalDetails.trim() ||
-      state.additionalDetails.length > 1200 ||
-      state.isGenerating
-    );
+    const formData = {
+      jobTitle: state.jobTitle,
+      company: state.company,
+      skills: state.skills,
+      additionalDetails: state.additionalDetails,
+    };
+
+    const validation = validateJobApplicationForm(formData);
+    return !validation.success || state.isGenerating;
   };
 
   const autoSaveApplication = async (
@@ -341,20 +366,39 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     dispatch({ type: "RESET_FORM" });
   };
 
+  const handleFieldValidation = (
+    fieldName: keyof JobApplicationFormData,
+    value: string
+  ) => {
+    const validation = validateField(fieldName, value);
+    if (!validation.success && validation.error) {
+      dispatch({
+        type: "SET_VALIDATION_ERRORS",
+        payload: { ...state.validationErrors, [fieldName]: validation.error },
+      });
+    } else {
+      dispatch({ type: "CLEAR_VALIDATION_ERROR", payload: fieldName });
+    }
+  };
+
   const handleJobTitleChange = (value: string) => {
     dispatch({ type: "SET_JOB_TITLE", payload: value });
+    handleFieldValidation("jobTitle", value);
   };
 
   const handleCompanyChange = (value: string) => {
     dispatch({ type: "SET_COMPANY", payload: value });
+    handleFieldValidation("company", value);
   };
 
   const handleSkillsChange = (value: string) => {
     dispatch({ type: "SET_SKILLS", payload: value });
+    handleFieldValidation("skills", value);
   };
 
   const handleAdditionalDetailsChange = (value: string) => {
     dispatch({ type: "SET_ADDITIONAL_DETAILS", payload: value });
+    handleFieldValidation("additionalDetails", value);
   };
 
   const handleJobTitleBlur = () => {
@@ -363,6 +407,14 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
   const handleCompanyBlur = () => {
     updateTitleFromFields();
+  };
+
+  const getFieldError = (fieldName: keyof JobApplicationFormData) => {
+    return state.validationErrors[fieldName];
+  };
+
+  const hasFieldError = (fieldName: keyof JobApplicationFormData) => {
+    return Boolean(state.validationErrors[fieldName]);
   };
 
   return {
@@ -381,6 +433,8 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       handleCreateNew,
       getTitleClassName,
       isGenerateDisabled,
+      getFieldError,
+      hasFieldError,
     },
   };
 }

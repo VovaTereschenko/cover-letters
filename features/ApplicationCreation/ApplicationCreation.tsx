@@ -37,6 +37,8 @@ export default function ApplicationCreation({
               value={state.jobTitle}
               onChange={actions.handleJobTitleChange}
               onBlur={actions.handleJobTitleBlur}
+              error={actions.hasFieldError("jobTitle")}
+              helperText={actions.getFieldError("jobTitle")}
             />
             <TextField
               variant="input"
@@ -45,6 +47,8 @@ export default function ApplicationCreation({
               value={state.company}
               onChange={actions.handleCompanyChange}
               onBlur={actions.handleCompanyBlur}
+              error={actions.hasFieldError("company")}
+              helperText={actions.getFieldError("company")}
             />
           </section>
 
@@ -55,6 +59,8 @@ export default function ApplicationCreation({
               placeholder={UI_MESSAGES.placeholders.skills}
               value={state.skills}
               onChange={actions.handleSkillsChange}
+              error={actions.hasFieldError("skills")}
+              helperText={actions.getFieldError("skills")}
             />
           </section>
 
@@ -69,6 +75,8 @@ export default function ApplicationCreation({
               rows={8}
               resize="none"
               expandable
+              error={actions.hasFieldError("additionalDetails")}
+              helperText={actions.getFieldError("additionalDetails")}
             />
           </section>
 
