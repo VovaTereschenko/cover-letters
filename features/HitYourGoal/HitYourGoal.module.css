@@ -52,8 +52,4 @@
     margin-left: var(--spacing-3);
     margin-right: var(--spacing-3);
   }
-
-  .actions {
-    gap: var(--spacing-3);
-  }
 }
