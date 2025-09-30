@@ -14,7 +14,7 @@ type ButtonProps = {
   size?: ButtonSize;
   disabled?: boolean;
   loading?: boolean;
-  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   type?: "button" | "submit" | "reset";
   icon?: React.ReactNode;
