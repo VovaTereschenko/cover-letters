@@ -6,7 +6,7 @@ import { Button } from "@/components/shared/Button";
 import { CopyIcon, RefreshIcon } from "@/components/icons";
 import { LoadingAnimation } from "./components";
 import { HitYourGoal } from "@/features/HitYourGoal";
-import { useJobApplication } from "@/hooks/useJobApplication";
+import { useJobApplication } from "@/features/ApplicationCreation/hooks/useJobApplication";
 import styles from "./ApplicationCreation.module.css";
 
 type ApplicationCreationProps = {

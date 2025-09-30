@@ -8,7 +8,7 @@ import {
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ClientSubHeader } from "@/components/headers/SubHeader";
 import { ClientHitYourGoal } from "@/features/HitYourGoal/ClientHitYourGoal";
-import { useApplicationsList } from "@/hooks/useApplicationsList";
+import { useApplicationsList } from "@/features/ApplicationsList/hooks/useApplicationsList";
 import styles from "./ApplicationsList.module.css";
 
 type SavedApplication = {
