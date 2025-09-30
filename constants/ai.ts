@@ -19,6 +19,35 @@ export const ERROR_MESSAGES = {
     `Failed to generate cover letter: ${message}`,
 } as const;
 
+export const UI_MESSAGES = {
+  newApplication: "New application",
+  generateButton: {
+    generating: "Generating...",
+    generateNow: "Generate Now",
+    generateNext: "Generate Next",
+    tryAgain: "Try Again",
+  },
+  toasts: {
+    generatedSuccessfully: "Application generated successfully!",
+    generatedWithFallback: "Application generated with fallback template",
+    copiedToClipboard: "Copied to clipboard",
+  },
+  placeholders: {
+    jobTitle: "Product manager",
+    company: "Apple",
+    skills: "HTML, CSS and doing things in time",
+    additionalDetails: "Describe why you are a great fit or paste your bio",
+    applicationPreview: "Your personalized job application will appear here...",
+  },
+  labels: {
+    jobTitle: "Job title",
+    company: "Company",
+    skills: "I am good at...",
+    additionalDetails: "Additional details",
+    copyToClipboard: "Copy to Clipboard",
+  },
+} as const;
+
 export const AI_PROMPTS = {
   systemPrompt: `You are a professional cover letter writer. Create compelling, personal cover letters that start with "Dear [Company] team," and describe the person's qualifications for the specific role.
 
@@ -61,4 +90,25 @@ IMPORTANT:
 - Write as if I'm personally introducing myself
 - Maximum 1000 characters (keep it very concise)
 - Make it specific to MY information and this ${jobTitle} role`,
+
+  fallbackTemplate: (
+    company: string,
+    jobTitle: string,
+    skills: string,
+    additionalDetails: string
+  ) =>
+    `Dear Hiring Manager at ${company || "your company"},
+
+I am writing to express my interest in the ${
+      jobTitle || "position"
+    } role. With my expertise in ${
+      skills || "various technologies"
+    }, I believe I would be a valuable addition to your team.
+
+${additionalDetails}
+
+Thank you for considering my application.
+
+Best regards,
+Your Name`,
 } as const;

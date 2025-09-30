@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef } from "react";
 import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
+import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
 
 type JobApplicationState = {
   jobTitle: string;
@@ -69,7 +70,7 @@ function jobApplicationReducer(
         skills: "",
         additionalDetails: "",
         generatedApplication: "",
-        titleText: "New application",
+        titleText: UI_MESSAGES.newApplication,
       };
     case "CLEAR_FORM_ONLY":
       return {
@@ -79,7 +80,7 @@ function jobApplicationReducer(
         skills: "",
         additionalDetails: "",
         generatedApplication: "",
-        titleText: "New application",
+        titleText: UI_MESSAGES.newApplication,
       };
     default:
       return state;
@@ -93,7 +94,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     skills: "",
     additionalDetails: "",
     generatedApplication: "",
-    titleText: "New application",
+    titleText: UI_MESSAGES.newApplication,
     isGenerating: false,
     applicationsCount: initialApplicationsCount,
     savedApplicationId: "",
@@ -143,7 +144,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
   const updateTitleFromFields = () => {
     if (!state.jobTitle.trim() && !state.company.trim()) {
-      dispatch({ type: "SET_TITLE_TEXT", payload: "New application" });
+      dispatch({ type: "SET_TITLE_TEXT", payload: UI_MESSAGES.newApplication });
       return;
     }
 
@@ -159,7 +160,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   };
 
   const getTitleClassName = (styles: Record<string, string>) => {
-    if (state.titleText === "New application") {
+    if (state.titleText === UI_MESSAGES.newApplication) {
       return `title-primary ${styles.title} ${styles.titlePlaceholder}`;
     }
     return `title-primary ${styles.title}`;
@@ -249,7 +250,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
         payload: data.coverLetter,
       });
 
-      showToast("Application generated successfully!", "save");
+      showToast(UI_MESSAGES.toasts.generatedSuccessfully, "save");
       setTimeout(() => autoSaveApplication(data.coverLetter), 100);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -258,28 +259,18 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       }
 
       console.error("Error generating cover letter:", error);
-      const fallbackApplication = `Dear Hiring Manager at ${
-        state.company || "your company"
-      },
-
-I am writing to express my interest in the ${
-        state.jobTitle || "position"
-      } role. With my expertise in ${
-        state.skills || "various technologies"
-      }, I believe I would be a valuable addition to your team.
-
-${state.additionalDetails}
-
-Thank you for considering my application.
-
-Best regards,
-Your Name`;
+      const fallbackApplication = AI_PROMPTS.fallbackTemplate(
+        state.company,
+        state.jobTitle,
+        state.skills,
+        state.additionalDetails
+      );
       dispatch({
         type: "SET_GENERATED_APPLICATION",
         payload: fallbackApplication,
       });
 
-      showToast("Application generated with fallback template", "save");
+      showToast(UI_MESSAGES.toasts.generatedWithFallback, "save");
       setTimeout(() => autoSaveApplication(fallbackApplication), 100);
     } finally {
       dispatch({ type: "SET_IS_GENERATING", payload: false });
@@ -317,7 +308,7 @@ Your Name`;
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(state.generatedApplication);
-    showToast("Copied to clipboard", "copy");
+    showToast(UI_MESSAGES.toasts.copiedToClipboard, "copy");
   };
 
   const handleCreateNew = () => {

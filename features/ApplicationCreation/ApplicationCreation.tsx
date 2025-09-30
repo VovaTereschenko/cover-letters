@@ -8,6 +8,7 @@ import { CopyIcon, RefreshIcon } from "@/components/icons";
 import { LoadingAnimation } from "./components";
 import { HitYourGoal } from "@/features/HitYourGoal";
 import { useJobApplication } from "@/features/ApplicationCreation/hooks/useJobApplication";
+import { UI_MESSAGES } from "@/constants/ai";
 import styles from "./ApplicationCreation.module.css";
 
 type ApplicationCreationProps = {
@@ -32,16 +33,16 @@ export default function ApplicationCreation({
           <section className={styles.inputRow}>
             <TextField
               variant="input"
-              label="Job title"
-              placeholder="Product manager"
+              label={UI_MESSAGES.labels.jobTitle}
+              placeholder={UI_MESSAGES.placeholders.jobTitle}
               value={state.jobTitle}
               onChange={actions.handleJobTitleChange}
               onBlur={actions.handleJobTitleBlur}
             />
             <TextField
               variant="input"
-              label="Company"
-              placeholder="Apple"
+              label={UI_MESSAGES.labels.company}
+              placeholder={UI_MESSAGES.placeholders.company}
               value={state.company}
               onChange={actions.handleCompanyChange}
               onBlur={actions.handleCompanyBlur}
@@ -51,8 +52,8 @@ export default function ApplicationCreation({
           <section className={styles.inputSingle}>
             <TextField
               variant="input"
-              label="I am good at..."
-              placeholder="HTML, CSS and doing things in time"
+              label={UI_MESSAGES.labels.skills}
+              placeholder={UI_MESSAGES.placeholders.skills}
               value={state.skills}
               onChange={actions.handleSkillsChange}
             />
@@ -61,8 +62,8 @@ export default function ApplicationCreation({
           <section className={styles.textareaSection}>
             <TextField
               variant="textarea"
-              label="Additional details"
-              placeholder="Describe why you are a great fit or paste your bio"
+              label={UI_MESSAGES.labels.additionalDetails}
+              placeholder={UI_MESSAGES.placeholders.additionalDetails}
               value={state.additionalDetails}
               onChange={actions.handleAdditionalDetailsChange}
               maxSymbols={1200}
@@ -82,7 +83,7 @@ export default function ApplicationCreation({
                   className={styles.generateButton}
                   icon={<RefreshIcon />}
                 >
-                  Try Again
+                  {UI_MESSAGES.generateButton.tryAgain}
                 </Button>
                 <Button
                   variant="primary"
@@ -91,7 +92,9 @@ export default function ApplicationCreation({
                   className={styles.generateButton}
                   loading={state.isGenerating}
                 >
-                  {state.isGenerating ? "Generating..." : "Generate Next"}
+                  {state.isGenerating
+                    ? UI_MESSAGES.generateButton.generating
+                    : UI_MESSAGES.generateButton.generateNext}
                 </Button>
               </div>
             ) : (
@@ -103,7 +106,9 @@ export default function ApplicationCreation({
                 className={styles.generateButton}
                 loading={state.isGenerating}
               >
-                {state.isGenerating ? "Generating..." : "Generate Now"}
+                {state.isGenerating
+                  ? UI_MESSAGES.generateButton.generating
+                  : UI_MESSAGES.generateButton.generateNow}
               </Button>
             )}
           </footer>
@@ -131,7 +136,7 @@ export default function ApplicationCreation({
                   "text-secondary"
                 )}
               >
-                Your personalized job application will appear here...
+                {UI_MESSAGES.placeholders.applicationPreview}
               </div>
             )}
           </article>
@@ -144,7 +149,7 @@ export default function ApplicationCreation({
                 icon={<CopyIcon />}
                 iconPosition="right"
               >
-                Copy to Clipboard
+                {UI_MESSAGES.labels.copyToClipboard}
               </Button>
             </footer>
           )}
