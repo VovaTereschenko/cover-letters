@@ -2,6 +2,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
 import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
+import { ProgressHighlightColor } from "@/types";
 
 type JobApplicationState = {
   jobTitle: string;
@@ -14,7 +15,7 @@ type JobApplicationState = {
   applicationsCount: number;
   savedApplicationId: string;
   isCountLoaded: boolean;
-  progressHighlightColor?: "positive" | "negative";
+  progressHighlightColor?: ProgressHighlightColor;
 };
 
 type JobApplicationAction =
@@ -30,7 +31,7 @@ type JobApplicationAction =
   | { type: "SET_COUNT_LOADED"; payload: boolean }
   | {
       type: "SET_PROGRESS_HIGHLIGHT_COLOR";
-      payload: "positive" | "negative";
+      payload: ProgressHighlightColor;
     }
   | { type: "RESET_FORM" }
   | { type: "CLEAR_FORM_ONLY" };

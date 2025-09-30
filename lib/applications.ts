@@ -1,11 +1,4 @@
-type SavedApplication = {
-  id: string;
-  title: string;
-  company: string;
-  jobTitle: string;
-  content: string;
-  createdAt: string;
-};
+import { SavedApplication } from "@/types";
 
 export async function getApplications(): Promise<SavedApplication[]> {
   return [];

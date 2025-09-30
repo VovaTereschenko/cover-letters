@@ -2,15 +2,7 @@ import { useEffect, useReducer } from "react";
 import { useApplicationsCount } from "@/contexts/ApplicationsCountContext";
 import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
-
-type SavedApplication = {
-  id: string;
-  title: string;
-  company: string;
-  jobTitle: string;
-  content: string;
-  createdAt: string;
-};
+import { SavedApplication } from "@/types";
 
 type ApplicationsState = {
   applications: SavedApplication[];

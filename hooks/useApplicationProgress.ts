@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { localStorageService } from "@/lib/localStorage";
 import { setClientApplicationCount } from "@/lib/clientCookies";
-
-type HighlightColor = "positive" | "negative" | null;
+import { HighlightColor } from "@/types";
 
 export function useApplicationProgress(initialApplicationCount: number) {
   const [applicationCount, setApplicationCount] = useState(

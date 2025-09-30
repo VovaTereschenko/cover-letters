@@ -9,16 +9,8 @@ import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ClientSubHeader } from "@/components/headers/SubHeader";
 import { ClientHitYourGoal } from "@/features/HitYourGoal/ClientHitYourGoal";
 import { useApplicationsList } from "@/features/ApplicationsList/hooks/useApplicationsList";
+import { SavedApplication } from "@/types";
 import styles from "./ApplicationsList.module.css";
-
-type SavedApplication = {
-  id: string;
-  title: string;
-  company: string;
-  jobTitle: string;
-  content: string;
-  createdAt: string;
-};
 
 type ApplicationsListProps = {
   initialApplications: SavedApplication[];
@@ -29,30 +21,33 @@ export function ApplicationsList({
 }: ApplicationsListProps) {
   const { state, actions } = useApplicationsList(initialApplications);
 
+  const shouldShowApplicationsList =
+    initialApplications.length > 0 &&
+    (state.applications.length > 0 || !state.isHydrated);
+
   return (
     <div className={styles.container}>
       <ClientSubHeader />
 
-      {initialApplications.length > 0 &&
-        (state.applications.length > 0 || !state.isHydrated) && (
-          <section className={styles.applicationsSection}>
-            <div className={styles.applicationsList}>
-              {state.applications.map((app) => {
-                const isPlaceholder = app.id.startsWith("placeholder-");
-                return (
-                  <ApplicationCard
-                    key={app.id}
-                    content={app.content}
-                    onCardClick={() => actions.handleCardClick(app)}
-                    onDelete={() => actions.handleDeleteClick(app.id)}
-                    onCopy={() => actions.handleCopyToClipboard(app.content)}
-                    isPlaceholder={isPlaceholder}
-                  />
-                );
-              })}
-            </div>
-          </section>
-        )}
+      {shouldShowApplicationsList && (
+        <section className={styles.applicationsSection}>
+          <div className={styles.applicationsList}>
+            {state.applications.map((app) => {
+              const isPlaceholder = app.id.startsWith("placeholder-");
+              return (
+                <ApplicationCard
+                  key={app.id}
+                  content={app.content}
+                  onCardClick={() => actions.handleCardClick(app)}
+                  onDelete={() => actions.handleDeleteClick(app.id)}
+                  onCopy={() => actions.handleCopyToClipboard(app.content)}
+                  isPlaceholder={isPlaceholder}
+                />
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <ClientHitYourGoal />
 

@@ -8,8 +8,7 @@ import {
   useRef,
 } from "react";
 import { Toast } from "@/components/shared/Toast";
-
-type ToastType = "copy" | "save" | "delete" | "error";
+import { ToastType } from "@/types";
 
 type ToastState = {
   isVisible: boolean;

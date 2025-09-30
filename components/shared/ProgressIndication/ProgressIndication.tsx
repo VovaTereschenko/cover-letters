@@ -7,13 +7,14 @@ import {
 } from "@/constants";
 import classNames from "classnames";
 import { CheckmarkIcon } from "../../icons";
+import { HighlightColor } from "@/types";
 
 type ProgressIndicationProps = {
   currentStep: number;
   totalSteps?: number;
   singularText?: string;
   pluralText?: string;
-  highlightColor?: "positive" | "negative" | null;
+  highlightColor?: HighlightColor;
 };
 
 const ProgressIndication = ({

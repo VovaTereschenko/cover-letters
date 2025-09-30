@@ -1,13 +1,5 @@
 import { setClientApplicationCount } from "./clientCookies";
-
-type SavedApplication = {
-  id: string;
-  title: string;
-  company: string;
-  jobTitle: string;
-  content: string;
-  createdAt: string;
-};
+import { SavedApplication } from "@/types";
 
 const STORAGE_KEY = "saved_applications";
 
