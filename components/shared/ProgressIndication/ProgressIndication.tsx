@@ -13,7 +13,7 @@ type ProgressIndicationProps = {
   totalSteps?: number;
   singularText?: string;
   pluralText?: string;
-  highlightColor?: "positive" | "negative" | null;
+  highlightColor?: "positive" | "negative";
 };
 
 const ProgressIndication = ({
@@ -21,7 +21,7 @@ const ProgressIndication = ({
   totalSteps = RECOMMENDED_AMOUNT_OF_APPLICATIONS,
   singularText = DEFAULT_SINGULAR_TEXT,
   pluralText = DEFAULT_PLURAL_TEXT,
-  highlightColor = null,
+  highlightColor = undefined,
 }: ProgressIndicationProps) => {
   const [isHighlighted, setIsHighlighted] = useState(false);
   const previousStepRef = useRef(currentStep);

@@ -13,7 +13,7 @@ type JobApplicationState = {
   applicationsCount: number;
   savedApplicationId: string;
   isCountLoaded: boolean;
-  progressHighlightColor: "positive" | "negative" | null;
+  progressHighlightColor?: "positive" | "negative";
 };
 
 type JobApplicationAction =
@@ -29,7 +29,7 @@ type JobApplicationAction =
   | { type: "SET_COUNT_LOADED"; payload: boolean }
   | {
       type: "SET_PROGRESS_HIGHLIGHT_COLOR";
-      payload: "positive" | "negative" | null;
+      payload: "positive" | "negative";
     }
   | { type: "RESET_FORM" }
   | { type: "CLEAR_FORM_ONLY" };
@@ -98,7 +98,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     applicationsCount: initialApplicationsCount,
     savedApplicationId: "",
     isCountLoaded: true,
-    progressHighlightColor: null,
+    progressHighlightColor: undefined,
   };
 
   const [state, dispatch] = useReducer(jobApplicationReducer, initialState);

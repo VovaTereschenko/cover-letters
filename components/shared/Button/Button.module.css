@@ -22,7 +22,7 @@
 .content {
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: var(--spacing-6);
 }
 
 .icon {
@@ -40,21 +40,21 @@
 }
 
 .small {
-  height: 36px;
-  padding: 0 var(--spacing-3);
+  height: var(--button-height-sm);
+  padding: 0 var(--spacing-8);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-sm);
 }
 
 .medium {
-  height: 44px;
+  height: var(--button-height-md);
   padding: 0 var(--spacing-12);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
 }
 
 .large {
-  height: 60px;
+  height: var(--button-height-lg);
   padding: 0 var(--spacing-12);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);

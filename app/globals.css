@@ -51,7 +51,7 @@
   --color-green-700: #065a35;
   --color-green-800: #044e2d;
   --color-green-200: #73e2a3;
-  --color-green-100: #d3f8df;
+  --color-green-100: #edfcf2;
   --color-red-500: #f04438;
   --color-red-300: #fda29b;
   --color-red-100: #fee4e2;
@@ -136,8 +136,8 @@
   --panel-width: 544px;
   --card-min-height: 280px;
   --textarea-min-height: 120px;
-  --button-height-sm: 36px;
-  --button-height-md: 44px;
+  --button-height-sm: 44px;
+  --button-height-md: 56px;
   --button-height-lg: 60px;
   --icon-size-sm: 32px;
   --icon-size-md: 40px;

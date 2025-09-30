@@ -76,7 +76,7 @@ export default function ApplicationCreation({
               <div className={styles.buttonGroup}>
                 <Button
                   variant="outlined"
-                  size="large"
+                  size="medium"
                   onClick={actions.handleTryAgain}
                   className={styles.generateButton}
                   icon={<RefreshIcon />}
@@ -85,7 +85,7 @@ export default function ApplicationCreation({
                 </Button>
                 <Button
                   variant="primary"
-                  size="large"
+                  size="medium"
                   onClick={actions.handleGenerateNext}
                   className={styles.generateButton}
                   loading={state.isGenerating}
@@ -96,7 +96,7 @@ export default function ApplicationCreation({
             ) : (
               <Button
                 variant="primary"
-                size="large"
+                size="medium"
                 onClick={actions.handleGenerate}
                 disabled={actions.isGenerateDisabled() || state.isGenerating}
                 className={styles.generateButton}

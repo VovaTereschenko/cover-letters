@@ -16,7 +16,7 @@ const SubHeader: React.FC<SubHeaderProps> = ({ onCreateNew }) => {
       <nav>
         <Button
           variant="primary"
-          size="medium"
+          size="small"
           icon={<PlusIcon />}
           onClick={onCreateNew}
         >
