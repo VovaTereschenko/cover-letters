@@ -83,7 +83,6 @@ export function ApplicationCard({
           icon={<DeleteIcon />}
           onKeyDown={(e) => {
             e.stopPropagation();
-            onDelete();
           }}
           onClick={(e) => {
             e.stopPropagation();
@@ -101,7 +100,6 @@ export function ApplicationCard({
           }}
           onKeyDown={(e) => {
             e.stopPropagation();
-            onDelete();
           }}
           iconPosition="right"
         >
