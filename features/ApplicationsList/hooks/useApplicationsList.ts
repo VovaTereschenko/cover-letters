@@ -5,6 +5,10 @@ import { localStorageService } from "@/lib/localStorage";
 import { SavedApplication } from "@/types";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 
+function assertNever(value: never): never {
+  throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
+}
+
 type ApplicationsState = {
   applications: SavedApplication[];
   isHydrated: boolean;
@@ -73,7 +77,7 @@ function applicationsReducer(
     case "SET_PREVIOUS_COUNT":
       return { ...state, previousCount: action.payload };
     default:
-      return state;
+      return assertNever(action);
   }
 }
 

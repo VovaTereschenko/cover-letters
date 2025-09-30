@@ -10,6 +10,10 @@ import {
 import { Toast } from "@/components/shared/Toast";
 import { ToastType } from "@/types";
 
+function assertNever(value: never): never {
+  throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
+}
+
 type ToastState = {
   isVisible: boolean;
   message: string;
@@ -64,7 +68,7 @@ function toastReducer(state: ToastState, action: ToastAction): ToastState {
         shouldRender: false,
       };
     default:
-      return state;
+      return assertNever(action);
   }
 }
 
