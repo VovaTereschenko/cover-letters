@@ -3,7 +3,7 @@ import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
 import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
 import { ProgressHighlightColor } from "@/types";
-import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
+import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
 
 function assertNever(value: never): never {
   throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
@@ -219,7 +219,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
         updatedApplications.length === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
         previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
       ) {
-        sessionStorage.setItem("justReached5Applications", "true");
+        sessionStorage.setItem(STORAGE_KEYS.GOAL_ACHIEVEMENT, "true");
       }
 
       window.dispatchEvent(new CustomEvent("applicationsUpdated"));

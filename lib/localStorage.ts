@@ -1,7 +1,6 @@
 import { setClientApplicationCount } from "./clientCookies";
 import { SavedApplication } from "@/types";
-
-const STORAGE_KEY = "saved_applications";
+import { STORAGE_KEYS } from "@/constants/common";
 
 export const localStorageService = {
   getApplications: (): SavedApplication[] => {
@@ -10,7 +9,7 @@ export const localStorageService = {
     }
 
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem(STORAGE_KEYS.APPLICATIONS);
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
@@ -23,7 +22,10 @@ export const localStorageService = {
     }
 
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(applications));
+      localStorage.setItem(
+        STORAGE_KEYS.APPLICATIONS,
+        JSON.stringify(applications)
+      );
       setClientApplicationCount(applications.length);
     } catch (error) {
       console.error("Failed to save to localStorage:", error);

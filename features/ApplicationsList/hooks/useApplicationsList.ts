@@ -3,7 +3,7 @@ import { useApplicationsCount } from "@/contexts/ApplicationsCountContext";
 import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
 import { SavedApplication } from "@/types";
-import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
+import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
 
 function assertNever(value: never): never {
   throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
@@ -135,7 +135,7 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
 
   useEffect(() => {
     const justReached5 =
-      sessionStorage.getItem("justReached5Applications") === "true";
+      sessionStorage.getItem(STORAGE_KEYS.GOAL_ACHIEVEMENT) === "true";
 
     if (
       initialApplications.length >= RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
@@ -143,7 +143,7 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
     ) {
       const timer = setTimeout(() => {
         dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
-        sessionStorage.removeItem("justReached5Applications");
+        sessionStorage.removeItem(STORAGE_KEYS.GOAL_ACHIEVEMENT);
       }, 500);
 
       return () => clearTimeout(timer);
