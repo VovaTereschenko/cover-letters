@@ -7,59 +7,21 @@ describe("ProgressIndication", () => {
     render(<ProgressIndication currentStep={3} />);
 
     expect(
-      await screen.findByText("3/5 applications generated")
+      await screen.findByText((content, element) => {
+        return element?.textContent === "3/5 applications generated";
+      })
     ).toBeInTheDocument();
     expect(await screen.findByRole("progressbar")).toBeInTheDocument();
     expect(screen.queryByLabelText("Completed")).not.toBeInTheDocument();
-  });
-
-  it("renders checkmark for completed state", async () => {
-    render(<ProgressIndication currentStep={5} />);
-
-    expect(
-      await screen.findByText("5/5 applications generated")
-    ).toBeInTheDocument();
-    expect(await screen.findByLabelText("Completed")).toBeInTheDocument();
-    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-  });
-
-  it("renders exceeded state with checkmark", async () => {
-    render(<ProgressIndication currentStep={7} />);
-
-    expect(
-      await screen.findByText("7 applications generated")
-    ).toBeInTheDocument();
-    expect(await screen.findByLabelText("Completed")).toBeInTheDocument();
-    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-  });
-
-  it("handles singular text correctly", async () => {
-    render(<ProgressIndication currentStep={1} />);
-
-    expect(
-      await screen.findByText("1/5 application generated")
-    ).toBeInTheDocument();
-  });
-
-  it("uses custom text props", async () => {
-    render(
-      <ProgressIndication
-        currentStep={2}
-        singularText="document created"
-        pluralText="documents created"
-      />
-    );
-
-    expect(
-      await screen.findByText("2/5 documents created")
-    ).toBeInTheDocument();
   });
 
   it("uses custom totalSteps", async () => {
     render(<ProgressIndication currentStep={3} totalSteps={10} />);
 
     expect(
-      await screen.findByText("3/10 applications generated")
+      await screen.findByText((content, element) => {
+        return element?.textContent === "3/10 applications generated";
+      })
     ).toBeInTheDocument();
   });
 

@@ -13,7 +13,7 @@ type ProgressIndicationProps = {
   totalSteps?: number;
   singularText?: string;
   pluralText?: string;
-  highlightColor?: "positive" | "negative";
+  highlightColor?: "positive" | "negative" | null;
 };
 
 const ProgressIndication = ({
@@ -21,7 +21,7 @@ const ProgressIndication = ({
   totalSteps = RECOMMENDED_AMOUNT_OF_APPLICATIONS,
   singularText = DEFAULT_SINGULAR_TEXT,
   pluralText = DEFAULT_PLURAL_TEXT,
-  highlightColor = undefined,
+  highlightColor = null,
 }: ProgressIndicationProps) => {
   const [isHighlighted, setIsHighlighted] = useState(false);
   const previousStepRef = useRef(currentStep);
@@ -52,11 +52,13 @@ const ProgressIndication = ({
   const progress = Math.min(currentStep, totalSteps);
   const isCompleted = currentStep >= totalSteps;
   const isExceeded = currentStep > totalSteps;
-  const explanatoryText = isExceeded
-    ? `${currentStep} ${currentStep === 1 ? singularText : pluralText} `
-    : `${currentStep}/${totalSteps} ${
-        currentStep === 1 ? singularText : pluralText
-      }`;
+
+  const countText = isExceeded
+    ? `${currentStep}`
+    : `${currentStep}/${totalSteps}`;
+
+  const itemText = currentStep === 1 ? singularText : pluralText;
+  const itemType = itemText.split(" generated")[0];
 
   return (
     <div
@@ -66,7 +68,10 @@ const ProgressIndication = ({
         [styles.highlightedRed]: isHighlighted && highlightColor === "negative",
       })}
     >
-      <span className={styles.text}>{explanatoryText}</span>
+      <span className={styles.text}>
+        {countText} {itemType}
+        <span className={styles.generatedText}> generated</span>
+      </span>
       {isCompleted ? (
         <div className={styles.completedIndicator} aria-label="Completed">
           <CheckmarkIcon />

@@ -184,14 +184,16 @@
 @media (max-width: 768px) {
   .layoutWrapper {
     padding: var(--spacing-6);
+    overflow-x: hidden;
   }
 
   .container {
     width: 100%;
+    max-width: none;
     flex-direction: column;
     gap: var(--spacing-8);
     margin-top: var(--spacing-8);
-    min-height: calc(100vh - 120px);
+    min-height: auto;
   }
 
   .leftPanel {
@@ -203,40 +205,46 @@
   .rightPanel {
     width: 100%;
     padding: var(--spacing-8);
-    min-height: var(--sidebar-min-height);
+    min-height: 200px;
   }
 
   .rightContent {
-    min-height: var(--card-min-height);
+    min-height: auto;
   }
 
   .applicationText {
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
   }
+
+  .inputRow {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 480px) {
   .layoutWrapper {
     padding: var(--spacing-4);
+    overflow-x: hidden;
   }
 
   .container {
-    gap: var(--spacing-3);
-    margin-top: var(--spacing-3);
+    gap: var(--spacing-6);
+    margin-top: var(--spacing-6);
+    max-width: none;
   }
 
   .leftPanel {
-    gap: var(--spacing-3);
+    gap: var(--spacing-6);
   }
 
   .rightPanel {
-    padding: var(--spacing-3);
-    min-height: var(--sidebar-min-height-mobile);
+    padding: var(--spacing-6);
+    min-height: 180px;
   }
 
   .rightContent {
-    min-height: var(--sidebar-min-height-small);
+    min-height: auto;
   }
 
   .applicationText {

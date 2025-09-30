@@ -66,3 +66,13 @@
   align-items: center;
   justify-content: center;
 }
+
+.generatedText {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+  .generatedText {
+    display: none;
+  }
+}
