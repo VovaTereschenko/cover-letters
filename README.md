@@ -57,15 +57,12 @@
 > - **Нотификации через Toast компонент** – без них как-то непонятно, завершено ли действие с успехом.
 > - **Темная тема**, которая включается при соответствующих настройках компьютера.
 >
-> ![Dark Theme](public/readme-content/dark-1.png)
-> ![Dark Theme](public/readme-content/dark-2.png)
-> ![Dark Theme](public/readme-content/dark-3.png)
-> ![Dark Theme](public/readme-content/dark-4.png)
+> ![Dark Theme](public/readme-content/dark-1.png) > ![Dark Theme](public/readme-content/dark-2.png) > ![Dark Theme](public/readme-content/dark-3.png) > ![Dark Theme](public/readme-content/dark-4.png)
 
 > - **Abort controller для запросов на ChatGPT** – это нужно, чтобы лишнего не генерировалось, если покидаешь страницу.
 > - **Изменение сопроводительных писем из списка** – довольно нужная функция.
-> - **Незначительное изменение дизайна**
 > - **Навигация через табы и клики по space**. Я протестил весь путь.
+>   ![Tab Navigation](public/readme-content/tabs-nav.gif)
 > - **Кое-какие семантические нюансы** через article/section/aside/header и т.д.
 > - **Фавикон**
 > - **Диалог о завершении задания** "Goal achieved"
