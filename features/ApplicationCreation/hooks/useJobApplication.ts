@@ -35,6 +35,15 @@ type JobApplicationAction =
   | { type: "RESET_FORM" }
   | { type: "CLEAR_FORM_ONLY" };
 
+const EMPTY_FORM = {
+  jobTitle: "",
+  company: "",
+  skills: "",
+  additionalDetails: "",
+  generatedApplication: "",
+  titleText: UI_MESSAGES.newApplication,
+};
+
 function jobApplicationReducer(
   state: JobApplicationState,
   action: JobApplicationAction
@@ -65,22 +74,12 @@ function jobApplicationReducer(
     case "RESET_FORM":
       return {
         ...state,
-        jobTitle: "",
-        company: "",
-        skills: "",
-        additionalDetails: "",
-        generatedApplication: "",
-        titleText: UI_MESSAGES.newApplication,
+        ...EMPTY_FORM,
       };
     case "CLEAR_FORM_ONLY":
       return {
         ...state,
-        jobTitle: "",
-        company: "",
-        skills: "",
-        additionalDetails: "",
-        generatedApplication: "",
-        titleText: UI_MESSAGES.newApplication,
+        ...EMPTY_FORM,
       };
     default:
       return state;
