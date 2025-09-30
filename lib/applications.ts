@@ -1,4 +1,4 @@
-export type SavedApplication = {
+type SavedApplication = {
   id: string;
   title: string;
   company: string;
