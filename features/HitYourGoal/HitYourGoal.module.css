@@ -2,7 +2,7 @@
   max-width: var(--layout-max-width);
   width: 100%;
   margin: 0 auto;
-  background: var(--color-green-100);
+  background: var(--color-green-50);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-24);
   margin-top: var(--spacing-16);
