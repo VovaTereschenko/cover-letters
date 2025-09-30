@@ -19,6 +19,7 @@ export default function ApplicationCreation({
 }: ApplicationCreationProps) {
   const { state, actions } = useJobApplication(initialApplicationsCount);
 
+  state.isGenerating = true;
   return (
     <main className={styles.layoutWrapper}>
       <div className={styles.container}>
