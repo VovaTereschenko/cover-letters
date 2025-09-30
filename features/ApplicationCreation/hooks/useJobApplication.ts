@@ -5,6 +5,10 @@ import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
 import { ProgressHighlightColor } from "@/types";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 
+function assertNever(value: never): never {
+  throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
+}
+
 type JobApplicationState = {
   jobTitle: string;
   company: string;
@@ -82,9 +86,10 @@ function jobApplicationReducer(
       return {
         ...state,
         ...EMPTY_FORM,
+        savedApplicationId: "",
       };
     default:
-      return state;
+      return assertNever(action);
   }
 }
 
@@ -178,7 +183,10 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     );
   };
 
-  const autoSaveApplication = async (content: string) => {
+  const autoSaveApplication = async (
+    content: string,
+    getSavedApplicationId: () => string
+  ) => {
     const application = {
       id: Date.now().toString(),
       title: state.titleText,
@@ -189,8 +197,9 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     };
 
     try {
-      if (state.savedApplicationId) {
-        localStorageService.deleteApplication(state.savedApplicationId);
+      const savedApplicationId = getSavedApplicationId();
+      if (savedApplicationId) {
+        localStorageService.deleteApplication(savedApplicationId);
       }
 
       const updatedApplications =
@@ -255,7 +264,11 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       });
 
       showToast(UI_MESSAGES.toasts.generatedSuccessfully, "save");
-      setTimeout(() => autoSaveApplication(data.coverLetter), 100);
+      setTimeout(
+        () =>
+          autoSaveApplication(data.coverLetter, () => state.savedApplicationId),
+        100
+      );
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Request was cancelled");
@@ -275,7 +288,14 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       });
 
       showToast(UI_MESSAGES.toasts.generatedWithFallback, "save");
-      setTimeout(() => autoSaveApplication(fallbackApplication), 100);
+      setTimeout(
+        () =>
+          autoSaveApplication(
+            fallbackApplication,
+            () => state.savedApplicationId
+          ),
+        100
+      );
     } finally {
       dispatch({ type: "SET_IS_GENERATING", payload: false });
     }
@@ -288,11 +308,13 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       })
     );
 
-    if (state.savedApplicationId) {
+    const getSavedApplicationId = () => state.savedApplicationId;
+    const savedApplicationId = getSavedApplicationId();
+
+    if (savedApplicationId) {
       try {
-        const updatedApplications = localStorageService.deleteApplication(
-          state.savedApplicationId
-        );
+        const updatedApplications =
+          localStorageService.deleteApplication(savedApplicationId);
         dispatch({
           type: "SET_APPLICATIONS_COUNT",
           payload: updatedApplications.length,
