@@ -1,12 +1,18 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useReducer, useRef } from "react";
 import { useToast } from "@/contexts/ToastContext";
-import { localStorageService } from "@/lib/localStorage";
-import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
+import { UI_MESSAGES } from "@/constants/ai";
 import type { JobApplicationState } from "../types";
 import { jobApplicationReducer } from "./jobApplicationReducer";
 import { useFormValidation } from "./useFormValidation";
 import { useTitleManager } from "./useTitleManager";
 import { useApplicationStorage } from "./useApplicationStorage";
+import { useApplicationsCountSync } from "./useApplicationsCountSync";
+import { useNavigationCleanup } from "./useNavigationCleanup";
+import {
+  createCoverLetterRequest,
+  handleSuccessfulGeneration,
+  handleGenerationError,
+} from "../utils/coverLetterGeneration";
 
 export function useJobApplication(initialApplicationsCount: number = 0) {
   const initialState: JobApplicationState = {
@@ -39,68 +45,37 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     dispatch
   );
 
-  useEffect(() => {
-    const applications = localStorageService.getApplications();
-    const actualCount = applications.length;
-
-    if (actualCount !== initialApplicationsCount) {
-      dispatch({ type: "SET_APPLICATIONS_COUNT", payload: actualCount });
-    }
-  }, [initialApplicationsCount]);
-
-  useEffect(() => {
-    const handleNavigation = () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-        dispatch({ type: "SET_IS_GENERATING", payload: false });
-      }
-    };
-
-    const handleBeforeUnload = () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-
-    window.addEventListener("navigationStarted", handleNavigation);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("navigationStarted", handleNavigation);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      const controller = abortControllerRef.current;
-      if (controller) {
-        controller.abort();
-      }
-    };
-  }, []);
+  useApplicationsCountSync(initialApplicationsCount, dispatch);
+  useNavigationCleanup(abortControllerRef, dispatch);
 
   const isGenerateDisabled = () => {
     return !isFormValid() || state.isGenerating;
   };
 
-  const handleGenerate = async () => {
+  const setupAbortController = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-
     abortControllerRef.current = new AbortController();
+    return abortControllerRef.current;
+  };
+
+  const handleGenerate = async () => {
+    const abortController = setupAbortController();
     dispatch({ type: "SET_IS_GENERATING", payload: true });
 
     try {
-      const response = await fetch("/api/generate-cover-letter", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          jobTitle: state.jobTitle,
-          company: state.company,
-          skills: state.skills,
-          additionalDetails: state.additionalDetails,
-        }),
-        signal: abortControllerRef.current.signal,
-      });
+      const formData = {
+        jobTitle: state.jobTitle,
+        company: state.company,
+        skills: state.skills,
+        additionalDetails: state.additionalDetails,
+      };
+
+      const response = await createCoverLetterRequest(
+        formData,
+        abortController
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -108,45 +83,29 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       }
 
       const data = await response.json();
-
-      dispatch({
-        type: "SET_GENERATED_APPLICATION",
-        payload: data.coverLetter,
+      await handleSuccessfulGeneration({
+        coverLetter: data.coverLetter,
+        dispatch,
+        showToast,
+        autoSaveApplication,
+        getSavedApplicationId: () => state.savedApplicationId,
       });
-
-      showToast(UI_MESSAGES.toasts.generatedSuccessfully, "save");
-      setTimeout(
-        () =>
-          autoSaveApplication(data.coverLetter, () => state.savedApplicationId),
-        100
-      );
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        console.log("Request was cancelled");
-        return;
-      }
+      const formData = {
+        company: state.company,
+        jobTitle: state.jobTitle,
+        skills: state.skills,
+        additionalDetails: state.additionalDetails,
+      };
 
-      console.error("Error generating cover letter:", error);
-      const fallbackApplication = AI_PROMPTS.fallbackTemplate(
-        state.company,
-        state.jobTitle,
-        state.skills,
-        state.additionalDetails
-      );
-      dispatch({
-        type: "SET_GENERATED_APPLICATION",
-        payload: fallbackApplication,
+      await handleGenerationError({
+        error,
+        formData,
+        dispatch,
+        showToast,
+        autoSaveApplication,
+        getSavedApplicationId: () => state.savedApplicationId,
       });
-
-      showToast(UI_MESSAGES.toasts.generatedWithFallback, "save");
-      setTimeout(
-        () =>
-          autoSaveApplication(
-            fallbackApplication,
-            () => state.savedApplicationId
-          ),
-        100
-      );
     } finally {
       dispatch({ type: "SET_IS_GENERATING", payload: false });
     }

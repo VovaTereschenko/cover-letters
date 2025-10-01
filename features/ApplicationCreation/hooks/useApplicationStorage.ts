@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { localStorageService } from "@/lib/localStorage";
-import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
 import type { JobApplicationState, JobApplicationAction } from "../types";
+import { handleGoalAchievement } from "../utils/goalAchievement";
+import { deleteSavedApplication } from "../utils/applicationStorage";
 
 export function useApplicationStorage(
   state: JobApplicationState,
@@ -37,12 +38,7 @@ export function useApplicationStorage(
         });
 
         // to show "You've just reached the goal" dialog on the applications page
-        if (
-          updatedApplications.length === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
-          previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
-        ) {
-          sessionStorage.setItem(STORAGE_KEYS.GOAL_ACHIEVEMENT, "true");
-        }
+        handleGoalAchievement(updatedApplications.length, previousCount);
 
         window.dispatchEvent(new CustomEvent("applicationsUpdated"));
       } catch (error) {
@@ -58,30 +54,9 @@ export function useApplicationStorage(
     ]
   );
 
-  const deleteSavedApplication = useCallback(
-    async (getSavedApplicationId: () => string) => {
-      const savedApplicationId = getSavedApplicationId();
-
-      if (savedApplicationId) {
-        try {
-          const updatedApplications =
-            localStorageService.deleteApplication(savedApplicationId);
-          dispatch({
-            type: "SET_APPLICATIONS_COUNT",
-            payload: updatedApplications.length,
-          });
-          dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: "" });
-          window.dispatchEvent(new CustomEvent("applicationsUpdated"));
-        } catch (error) {
-          console.error("Error deleting application:", error);
-        }
-      }
-    },
-    [dispatch]
-  );
-
   return {
     autoSaveApplication,
-    deleteSavedApplication,
+    deleteSavedApplication: (getSavedApplicationId: () => string) =>
+      deleteSavedApplication(getSavedApplicationId, dispatch),
   };
 }
