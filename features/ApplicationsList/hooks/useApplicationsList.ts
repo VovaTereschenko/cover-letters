@@ -30,17 +30,22 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
   const { setApplicationsCount } = useApplicationsCount();
   const { showToast } = useToast();
 
-  useApplicationsInitialization(
+  useApplicationsInitialization({
     initialApplications,
     dispatch,
-    setApplicationsCount
-  );
-  useGoalAchievementTracking(
-    state.applications.length,
-    state.previousCount,
-    dispatch
-  );
-  useSessionGoalCheck(initialApplications.length, dispatch);
+    setApplicationsCount,
+  });
+
+  useGoalAchievementTracking({
+    applicationsLength: state.applications.length,
+    previousCount: state.previousCount,
+    dispatch,
+  });
+
+  useSessionGoalCheck({
+    initialApplicationsLength: initialApplications.length,
+    dispatch,
+  });
 
   const handleCardClick = (app: SavedApplication) => {
     dispatch({ type: "OPEN_MODAL", payload: { application: app } });

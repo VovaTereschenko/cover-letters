@@ -2,10 +2,13 @@ import { useEffect } from "react";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
 import type { ApplicationsAction } from "../types";
 
-export function useSessionGoalCheck(
-  initialApplicationsLength: number,
-  dispatch: React.Dispatch<ApplicationsAction>
-) {
+export function useSessionGoalCheck({
+  initialApplicationsLength,
+  dispatch,
+}: {
+  initialApplicationsLength: number;
+  dispatch: React.Dispatch<ApplicationsAction>;
+}) {
   useEffect(() => {
     const justReachedTheGoal =
       sessionStorage.getItem(STORAGE_KEYS.GOAL_ACHIEVEMENT) === "true";

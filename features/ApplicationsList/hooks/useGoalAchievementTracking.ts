@@ -2,11 +2,15 @@ import { useEffect } from "react";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 import type { ApplicationsAction } from "../types";
 
-export function useGoalAchievementTracking(
-  applicationsLength: number,
-  previousCount: number,
-  dispatch: React.Dispatch<ApplicationsAction>
-) {
+export function useGoalAchievementTracking({
+  applicationsLength,
+  previousCount,
+  dispatch,
+}: {
+  applicationsLength: number;
+  previousCount: number;
+  dispatch: React.Dispatch<ApplicationsAction>;
+}) {
   useEffect(() => {
     if (
       applicationsLength === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
