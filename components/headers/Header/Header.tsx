@@ -6,7 +6,7 @@ import { Logo } from "../../icons/Logo";
 import { ProgressIndication } from "../../shared/ProgressIndication/ProgressIndication";
 import { IconButton } from "../../shared/IconButton";
 import { HomeIcon } from "../../icons";
-import { useApplicationProgress } from "@/hooks/useApplicationProgress";
+import { useApplicationProgress } from "./hooks/useApplicationProgress";
 import styles from "./Header.module.css";
 
 type HeaderProps = {
