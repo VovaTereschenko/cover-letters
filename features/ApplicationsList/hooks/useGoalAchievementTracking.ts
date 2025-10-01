@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
+import { useGoalAchievementTracking as useSharedGoalAchievementTracking } from "@/hooks/shared";
 import type { ApplicationsAction } from "../types";
 
 export function useGoalAchievementTracking({
@@ -11,16 +10,16 @@ export function useGoalAchievementTracking({
   previousCount: number;
   dispatch: React.Dispatch<ApplicationsAction>;
 }) {
-  useEffect(() => {
-    if (
-      applicationsLength === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
-      previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
-    ) {
-      dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
-    }
-    dispatch({
+  useSharedGoalAchievementTracking({
+    currentCount: applicationsLength,
+    previousCount,
+    dispatch,
+    showGoalAchievementAction: (): ApplicationsAction => ({
+      type: "SHOW_GOAL_ACHIEVEMENT",
+    }),
+    setPreviousCountAction: (count: number): ApplicationsAction => ({
       type: "SET_PREVIOUS_COUNT",
-      payload: applicationsLength,
-    });
-  }, [applicationsLength, previousCount, dispatch]);
+      payload: count,
+    }),
+  });
 }

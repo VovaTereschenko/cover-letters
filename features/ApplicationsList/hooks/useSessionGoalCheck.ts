@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
+import { useSessionGoalCheck as useSharedSessionGoalCheck } from "@/hooks/shared";
 import type { ApplicationsAction } from "../types";
 
 export function useSessionGoalCheck({
@@ -9,29 +8,11 @@ export function useSessionGoalCheck({
   initialApplicationsLength: number;
   dispatch: React.Dispatch<ApplicationsAction>;
 }) {
-  useEffect(() => {
-    const justReachedTheGoal =
-      sessionStorage.getItem(STORAGE_KEYS.GOAL_ACHIEVEMENT) === "true";
-
-    if (
-      initialApplicationsLength >= RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
-      justReachedTheGoal
-    ) {
-      let isCancelled = false;
-
-      const showGoalAchievement = async () => {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        if (!isCancelled) {
-          dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
-          sessionStorage.removeItem(STORAGE_KEYS.GOAL_ACHIEVEMENT);
-        }
-      };
-
-      showGoalAchievement();
-
-      return () => {
-        isCancelled = true;
-      };
-    }
-  }, [initialApplicationsLength, dispatch]);
+  useSharedSessionGoalCheck({
+    applicationCount: initialApplicationsLength,
+    dispatch,
+    showGoalAchievementAction: (): ApplicationsAction => ({
+      type: "SHOW_GOAL_ACHIEVEMENT",
+    }),
+  });
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { forwardRef, useId } from "react";
+import React, { useId } from "react";
 import classNames from "classnames";
 import styles from "./TextField.module.css";
 
@@ -35,136 +35,129 @@ type TextareaProps = BaseTextFieldProps & {
 
 type TextFieldProps = InputProps | TextareaProps;
 
-const TextField = forwardRef<
-  HTMLInputElement | HTMLTextAreaElement,
-  TextFieldProps
->(
-  (
-    {
-      label,
-      placeholder,
-      value,
-      onChange,
-      onBlur,
-      onFocus,
-      disabled = false,
-      error = false,
-      helperText,
-      required = false,
-      id,
-      name,
-      className,
-      expandable = false,
-      variant,
-      ...rest
-    },
-    ref
+const TextField = ({
+  label,
+  placeholder,
+  value,
+  onChange,
+  onBlur,
+  onFocus,
+  disabled = false,
+  error = false,
+  helperText,
+  required = false,
+  id,
+  name,
+  className,
+  expandable = false,
+  variant,
+  ref,
+  ...rest
+}: TextFieldProps & {
+  ref?: React.Ref<HTMLInputElement | HTMLTextAreaElement>;
+}) => {
+  const generatedId = useId();
+  const fieldId = id || generatedId;
+
+  const isMaxSymbolsExceeded =
+    variant === "textarea" &&
+    (rest as TextareaProps).maxSymbols &&
+    value &&
+    value.length > (rest as TextareaProps).maxSymbols!;
+
+  const hasError = error || isMaxSymbolsExceeded;
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const generatedId = useId();
-    const fieldId = id || generatedId;
+    onChange?.(e.target.value);
+  };
 
-    const isMaxSymbolsExceeded =
-      variant === "textarea" &&
-      (rest as TextareaProps).maxSymbols &&
-      value &&
-      value.length > (rest as TextareaProps).maxSymbols!;
+  const fieldClasses = classNames(
+    styles.field,
+    {
+      [styles.error]: hasError,
+      [styles.disabled]: disabled,
+    },
+    className
+  );
 
-    const hasError = error || isMaxSymbolsExceeded;
+  const containerClasses = classNames(
+    expandable ? styles.containerExpandable : styles.container,
+    {
+      [styles.containerError]: hasError,
+      [styles.containerDisabled]: disabled,
+    }
+  );
 
-    const handleChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {
-      onChange?.(e.target.value);
-    };
+  return (
+    <div className={containerClasses}>
+      <label
+        htmlFor={fieldId}
+        className={classNames(
+          styles.label,
+          "description-small",
+          "text-primary"
+        )}
+      >
+        {label}
+        {required && <span className={styles.required}>*</span>}
+      </label>
 
-    const fieldClasses = classNames(
-      styles.field,
-      {
-        [styles.error]: hasError,
-        [styles.disabled]: disabled,
-      },
-      className
-    );
+      {variant === "input" ? (
+        <input
+          ref={ref as React.Ref<HTMLInputElement>}
+          id={fieldId}
+          name={name}
+          type={(rest as InputProps).type || "text"}
+          className={classNames(fieldClasses, "description-medium")}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          disabled={disabled}
+          required={required}
+        />
+      ) : (
+        <textarea
+          ref={ref as React.Ref<HTMLTextAreaElement>}
+          id={fieldId}
+          name={name}
+          className={classNames(fieldClasses, "description-medium")}
+          placeholder={placeholder}
+          value={value}
+          onChange={handleChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          disabled={disabled}
+          required={required}
+          rows={(rest as TextareaProps).rows || 4}
+          style={{
+            resize: (rest as TextareaProps).resize || "vertical",
+          }}
+        />
+      )}
 
-    const containerClasses = classNames(
-      expandable ? styles.containerExpandable : styles.container,
-      {
-        [styles.containerError]: hasError,
-        [styles.containerDisabled]: disabled,
-      }
-    );
-
-    return (
-      <div className={containerClasses}>
-        <label
-          htmlFor={fieldId}
-          className={classNames(
-            styles.label,
-            "description-small",
-            "text-primary"
+      {(helperText ||
+        (variant === "textarea" && (rest as TextareaProps).maxSymbols)) && (
+        <div className={hasError ? styles.errorText : styles.helperText}>
+          {helperText}
+          {variant === "textarea" && (rest as TextareaProps).maxSymbols && (
+            <span
+              className={
+                isMaxSymbolsExceeded ? styles.charCountError : styles.charCount
+              }
+            >
+              {helperText && " "}
+              {value?.length || 0}/{(rest as TextareaProps).maxSymbols}
+            </span>
           )}
-        >
-          {label}
-          {required && <span className={styles.required}>*</span>}
-        </label>
-
-        {variant === "input" ? (
-          <input
-            ref={ref as React.Ref<HTMLInputElement>}
-            id={fieldId}
-            name={name}
-            type={(rest as InputProps).type || "text"}
-            className={classNames(fieldClasses, "description-medium")}
-            placeholder={placeholder}
-            value={value}
-            onChange={handleChange}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            disabled={disabled}
-            required={required}
-          />
-        ) : (
-          <textarea
-            ref={ref as React.Ref<HTMLTextAreaElement>}
-            id={fieldId}
-            name={name}
-            className={classNames(fieldClasses, "description-medium")}
-            placeholder={placeholder}
-            value={value}
-            onChange={handleChange}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            disabled={disabled}
-            required={required}
-            rows={(rest as TextareaProps).rows || 4}
-            style={{
-              resize: (rest as TextareaProps).resize || "vertical",
-            }}
-          />
-        )}
-
-        {(helperText ||
-          (variant === "textarea" && (rest as TextareaProps).maxSymbols)) && (
-          <div className={hasError ? styles.errorText : styles.helperText}>
-            {helperText}
-            {variant === "textarea" && (rest as TextareaProps).maxSymbols && (
-              <span
-                className={
-                  isMaxSymbolsExceeded
-                    ? styles.charCountError
-                    : styles.charCount
-                }
-              >
-                {helperText && " "}
-                {value?.length || 0}/{(rest as TextareaProps).maxSymbols}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  }
-);
+        </div>
+      )}
+    </div>
+  );
+};
 
 TextField.displayName = "TextField";
 
