@@ -1,37 +1,20 @@
-import { useCallback } from "react";
-import { UI_MESSAGES } from "@/constants/ai";
 import type { JobApplicationState, JobApplicationAction } from "../types";
+import {
+  updateTitleFromFields as updateTitleFromFieldsUtil,
+  getTitleClassName as getTitleClassNameUtil,
+} from "../utils/titleManagement";
 
 export function useTitleManager(
   state: JobApplicationState,
   dispatch: React.Dispatch<JobApplicationAction>
 ) {
-  const updateTitleFromFields = useCallback(() => {
-    if (!state.jobTitle.trim() && !state.company.trim()) {
-      dispatch({ type: "SET_TITLE_TEXT", payload: UI_MESSAGES.newApplication });
-      return;
-    }
+  const updateTitleFromFields = () => {
+    updateTitleFromFieldsUtil(state.jobTitle, state.company, dispatch);
+  };
 
-    const parts = [];
-    if (state.jobTitle.trim()) {
-      parts.push(state.jobTitle.trim());
-    }
-    if (state.company.trim()) {
-      parts.push(state.company.trim());
-    }
-
-    dispatch({ type: "SET_TITLE_TEXT", payload: parts.join(", ") });
-  }, [state.jobTitle, state.company, dispatch]);
-
-  const getTitleClassName = useCallback(
-    (styles: Record<string, string>) => {
-      if (state.titleText === UI_MESSAGES.newApplication) {
-        return `title-primary ${styles.title} ${styles.titlePlaceholder}`;
-      }
-      return `title-primary ${styles.title}`;
-    },
-    [state.titleText]
-  );
+  const getTitleClassName = (styles: Record<string, string>) => {
+    return getTitleClassNameUtil(state.titleText, styles);
+  };
 
   return {
     updateTitleFromFields,
