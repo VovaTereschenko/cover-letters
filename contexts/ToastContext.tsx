@@ -106,28 +106,24 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
       dispatch({ type: "START_SHOW_ANIMATION" });
     });
 
-    timeoutRef.current = setTimeout(() => {
+    timeoutRef.current = setTimeout(async () => {
       dispatch({ type: "START_HIDE_ANIMATION" });
-      setTimeout(() => {
-        dispatch({ type: "HIDE_TOAST" });
-        setTimeout(() => {
-          dispatch({ type: "CLEANUP_TOAST" });
-        }, 300);
-      }, 0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      dispatch({ type: "HIDE_TOAST" });
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      dispatch({ type: "CLEANUP_TOAST" });
     }, 2000);
   };
 
-  const hideToast = () => {
+  const hideToast = async () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
     dispatch({ type: "START_HIDE_ANIMATION" });
-    setTimeout(() => {
-      dispatch({ type: "HIDE_TOAST" });
-      setTimeout(() => {
-        dispatch({ type: "CLEANUP_TOAST" });
-      }, 300);
-    }, 0);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    dispatch({ type: "HIDE_TOAST" });
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    dispatch({ type: "CLEANUP_TOAST" });
   };
 
   return (

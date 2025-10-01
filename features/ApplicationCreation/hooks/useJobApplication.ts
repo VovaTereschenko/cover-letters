@@ -3,14 +3,14 @@ import { useToast } from "@/contexts/ToastContext";
 import { UI_MESSAGES } from "@/constants/ai";
 import type { JobApplicationState } from "../types";
 import { jobApplicationReducer } from "./jobApplicationReducer";
-import { useFormValidation } from "./useFormValidation";
-import { useTitleManager } from "./useTitleManager";
-import { useApplicationStorage } from "./useApplicationStorage";
+import { createFormValidation } from "../utils/formValidationHelpers";
+import { createTitleManagerHelpers } from "../utils/titleManagerHelpers";
+import { createApplicationStorageHelpers } from "../utils/applicationStorageHelpers";
 import { useApplicationsCountSync } from "./useApplicationsCountSync";
 import { useNavigationCleanup } from "./useNavigationCleanup";
 import {
   createCoverLetterRequest,
-  handleSuccessfulGeneration,
+  handleGenerationSuccess,
   handleGenerationError,
 } from "../utils/coverLetterGeneration";
 
@@ -35,15 +35,17 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const { handleFieldValidation, isFormValid, getFieldError, hasFieldError } =
-    useFormValidation(state, dispatch);
-  const { updateTitleFromFields, getTitleClassName } = useTitleManager(
-    state,
-    dispatch
-  );
-  const { autoSaveApplication, deleteSavedApplication } = useApplicationStorage(
-    state,
-    dispatch
-  );
+    createFormValidation({ state, dispatch });
+  const { updateTitleFromFields, getTitleClassName } =
+    createTitleManagerHelpers({
+      state,
+      dispatch,
+    });
+  const { autoSaveApplication, deleteSavedApplication } =
+    createApplicationStorageHelpers({
+      state,
+      dispatch,
+    });
 
   useApplicationsCountSync(initialApplicationsCount, dispatch);
   useNavigationCleanup(abortControllerRef, dispatch);
@@ -84,7 +86,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
       const data = await response.json();
 
-      await handleSuccessfulGeneration({
+      await handleGenerationSuccess({
         coverLetter: data.coverLetter,
         dispatch,
         showToast,
@@ -92,16 +94,8 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
         getSavedApplicationId: () => state.savedApplicationId,
       });
     } catch (error) {
-      const formData = {
-        company: state.company,
-        jobTitle: state.jobTitle,
-        skills: state.skills,
-        additionalDetails: state.additionalDetails,
-      };
-
       await handleGenerationError({
         error,
-        formData,
         dispatch,
         showToast,
         autoSaveApplication,

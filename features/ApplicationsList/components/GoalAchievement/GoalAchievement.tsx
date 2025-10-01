@@ -18,17 +18,31 @@ const GoalAchievement = ({ isVisible, onClose }: GoalAchievementProps) => {
     if (isVisible) {
       setShouldRender(true);
 
-      const timer = setTimeout(() => {
-        onClose();
-      }, 3000);
+      let isCancelled = false;
+      const autoClose = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        if (!isCancelled) {
+          onClose();
+        }
+      };
+      autoClose();
 
-      return () => clearTimeout(timer);
+      return () => {
+        isCancelled = true;
+      };
     } else {
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-      }, 300);
+      let isCancelled = false;
+      const hideComponent = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        if (!isCancelled) {
+          setShouldRender(false);
+        }
+      };
+      hideComponent();
 
-      return () => clearTimeout(timer);
+      return () => {
+        isCancelled = true;
+      };
     }
   }, [isVisible, onClose]);
 

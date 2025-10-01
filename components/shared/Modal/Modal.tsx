@@ -36,11 +36,11 @@ const Modal = ({
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         if (modalRef.current) {
           modalRef.current.focus();
         }
-      }, 0);
+      });
     } else {
       document.body.style.overflow = "unset";
     }

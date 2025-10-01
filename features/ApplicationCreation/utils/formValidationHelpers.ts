@@ -7,10 +7,13 @@ import {
   hasFieldError as hasFieldErrorUtility,
 } from "../utils/formValidation";
 
-export function useFormValidation(
-  state: JobApplicationState,
-  dispatch: React.Dispatch<JobApplicationAction>
-) {
+export function createFormValidation({
+  state,
+  dispatch,
+}: {
+  state: JobApplicationState;
+  dispatch: React.Dispatch<JobApplicationAction>;
+}) {
   const handleFieldValidation = (
     fieldName: keyof JobApplicationFormData,
     value: string

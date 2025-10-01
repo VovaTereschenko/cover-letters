@@ -17,12 +17,21 @@ export function useSessionGoalCheck({
       initialApplicationsLength >= RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
       justReachedTheGoal
     ) {
-      const timer = setTimeout(() => {
-        dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
-        sessionStorage.removeItem(STORAGE_KEYS.GOAL_ACHIEVEMENT);
-      }, 500);
+      let isCancelled = false;
 
-      return () => clearTimeout(timer);
+      const showGoalAchievement = async () => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (!isCancelled) {
+          dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
+          sessionStorage.removeItem(STORAGE_KEYS.GOAL_ACHIEVEMENT);
+        }
+      };
+
+      showGoalAchievement();
+
+      return () => {
+        isCancelled = true;
+      };
     }
   }, [initialApplicationsLength, dispatch]);
 }

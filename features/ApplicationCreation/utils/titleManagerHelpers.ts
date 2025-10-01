@@ -2,12 +2,15 @@ import type { JobApplicationState, JobApplicationAction } from "../types";
 import {
   updateTitleFromFields as updateTitleFromFieldsUtility,
   getTitleClassName as getTitleClassNameUtility,
-} from "../utils/titleManagement";
+} from "./titleManagement";
 
-export function useTitleManager(
-  state: JobApplicationState,
-  dispatch: React.Dispatch<JobApplicationAction>
-) {
+export function createTitleManagerHelpers({
+  state,
+  dispatch,
+}: {
+  state: JobApplicationState;
+  dispatch: React.Dispatch<JobApplicationAction>;
+}) {
   const updateTitleFromFields = () => {
     updateTitleFromFieldsUtility(state.jobTitle, state.company, dispatch);
   };

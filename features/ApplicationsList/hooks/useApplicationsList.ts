@@ -69,9 +69,8 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
 
   const handleSaveAndCloseWithToast = async () => {
     await handleSaveChanges();
-    setTimeout(() => {
-      showToast("Changes saved successfully!", "save");
-    }, 100);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    showToast("Changes saved successfully!", "save");
   };
 
   const handleDeleteApplication = async (appId: string) => {

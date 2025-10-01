@@ -21,7 +21,7 @@ export const createCoverLetterRequest = (
   });
 };
 
-export const handleSuccessfulGeneration = async ({
+export const handleGenerationSuccess = async ({
   coverLetter,
   dispatch,
   showToast,
@@ -29,9 +29,12 @@ export const handleSuccessfulGeneration = async ({
   getSavedApplicationId,
 }: {
   coverLetter: string;
-  dispatch: React.Dispatch<JobApplicationAction>;
+  dispatch: (action: JobApplicationAction) => void;
   showToast: (message: string, type?: ToastType) => void;
-  autoSaveApplication: (content: string, getSavedId: () => string) => void;
+  autoSaveApplication: (
+    content: string,
+    getSavedApplicationId: () => string
+  ) => Promise<void>;
   getSavedApplicationId: () => string;
 }) => {
   dispatch({
@@ -40,43 +43,30 @@ export const handleSuccessfulGeneration = async ({
   });
 
   showToast(UI_MESSAGES.toasts.generatedSuccessfully, "save");
-  setTimeout(
-    () => autoSaveApplication(coverLetter, getSavedApplicationId),
-    100
-  );
+
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  await autoSaveApplication(coverLetter, getSavedApplicationId);
 };
 
 export const handleGenerationError = async ({
   error,
-  formData,
   dispatch,
   showToast,
   autoSaveApplication,
   getSavedApplicationId,
 }: {
   error: unknown;
-  formData: {
-    company: string;
-    jobTitle: string;
-    skills: string;
-    additionalDetails: string;
-  };
-  dispatch: React.Dispatch<JobApplicationAction>;
+  dispatch: (action: JobApplicationAction) => void;
   showToast: (message: string, type?: ToastType) => void;
-  autoSaveApplication: (content: string, getSavedId: () => string) => void;
+  autoSaveApplication: (
+    content: string,
+    getSavedApplicationId: () => string
+  ) => Promise<void>;
   getSavedApplicationId: () => string;
 }) => {
-  if (error instanceof Error && error.name === "AbortError") {
-    console.log("Request was cancelled");
-    return;
-  }
+  console.error("Generation error:", error);
 
-  const fallbackApplication = AI_PROMPTS.fallbackTemplate(
-    formData.company,
-    formData.jobTitle,
-    formData.skills,
-    formData.additionalDetails
-  );
+  const fallbackApplication = AI_PROMPTS.fallbackTemplate("", "", "", "");
 
   dispatch({
     type: "SET_GENERATED_APPLICATION",
@@ -84,8 +74,7 @@ export const handleGenerationError = async ({
   });
 
   showToast(UI_MESSAGES.toasts.generatedWithFallback, "save");
-  setTimeout(
-    () => autoSaveApplication(fallbackApplication, getSavedApplicationId),
-    100
-  );
+
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  await autoSaveApplication(fallbackApplication, getSavedApplicationId);
 };
