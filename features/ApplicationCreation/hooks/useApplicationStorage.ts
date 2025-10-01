@@ -37,7 +37,6 @@ export function useApplicationStorage(
           payload: updatedApplications.length,
         });
 
-        // to show "You've just reached the goal" dialog on the applications page
         handleGoalAchievement(updatedApplications.length, previousCount);
 
         window.dispatchEvent(new CustomEvent("applicationsUpdated"));

@@ -83,6 +83,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       }
 
       const data = await response.json();
+
       await handleSuccessfulGeneration({
         coverLetter: data.coverLetter,
         dispatch,
@@ -135,7 +136,6 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     dispatch({ type: "RESET_FORM" });
   };
 
-  // Field change handlers
   const handleJobTitleChange = (value: string) => {
     dispatch({ type: "SET_JOB_TITLE", payload: value });
     handleFieldValidation("jobTitle", value);

@@ -1,10 +1,10 @@
 import type { JobApplicationFormData } from "@/lib/validations";
 import type { JobApplicationState, JobApplicationAction } from "../types";
 import {
-  handleFieldValidation as handleFieldValidationUtil,
-  isFormValid as isFormValidUtil,
-  getFieldError as getFieldErrorUtil,
-  hasFieldError as hasFieldErrorUtil,
+  handleFieldValidation as handleFieldValidationUtility,
+  isFormValid as isFormValidUtility,
+  getFieldError as getFieldErrorUtility,
+  hasFieldError as hasFieldErrorUtility,
 } from "../utils/formValidation";
 
 export function useFormValidation(
@@ -15,7 +15,7 @@ export function useFormValidation(
     fieldName: keyof JobApplicationFormData,
     value: string
   ) => {
-    handleFieldValidationUtil(
+    handleFieldValidationUtility(
       fieldName,
       value,
       state.validationErrors,
@@ -31,16 +31,14 @@ export function useFormValidation(
       additionalDetails: state.additionalDetails,
     };
 
-    return isFormValidUtil(formData);
+    return isFormValidUtility(formData);
   };
 
-  const getFieldError = (fieldName: keyof JobApplicationFormData) => {
-    return getFieldErrorUtil(fieldName, state.validationErrors);
-  };
+  const getFieldError = (fieldName: keyof JobApplicationFormData) =>
+    getFieldErrorUtility(fieldName, state.validationErrors);
 
-  const hasFieldError = (fieldName: keyof JobApplicationFormData) => {
-    return hasFieldErrorUtil(fieldName, state.validationErrors);
-  };
+  const hasFieldError = (fieldName: keyof JobApplicationFormData) =>
+    hasFieldErrorUtility(fieldName, state.validationErrors);
 
   return {
     handleFieldValidation,

@@ -10,8 +10,8 @@ export function useApplicationsCountSync(
     const applications = localStorageService.getApplications();
     const actualCount = applications.length;
 
-    if (actualCount !== initialApplicationsCount) {
-      dispatch({ type: "SET_APPLICATIONS_COUNT", payload: actualCount });
-    }
+    if (actualCount === initialApplicationsCount) return;
+
+    dispatch({ type: "SET_APPLICATIONS_COUNT", payload: actualCount });
   }, [initialApplicationsCount, dispatch]);
 }
