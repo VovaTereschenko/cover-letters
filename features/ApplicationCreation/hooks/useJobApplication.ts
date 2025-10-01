@@ -2,119 +2,11 @@ import { useEffect, useReducer, useRef } from "react";
 import { useToast } from "@/contexts/ToastContext";
 import { localStorageService } from "@/lib/localStorage";
 import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
-import { ProgressHighlightColor } from "@/types";
-import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
-import {
-  validateField,
-  validateJobApplicationForm,
-  type JobApplicationFormData,
-} from "@/lib/validations";
-
-function assertNever(value: never): never {
-  throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
-}
-
-type JobApplicationState = {
-  jobTitle: string;
-  company: string;
-  skills: string;
-  additionalDetails: string;
-  generatedApplication: string;
-  titleText: string;
-  isGenerating: boolean;
-  applicationsCount: number;
-  savedApplicationId: string;
-  isCountLoaded: boolean;
-  progressHighlightColor?: ProgressHighlightColor;
-  validationErrors: Partial<Record<keyof JobApplicationFormData, string>>;
-};
-
-type JobApplicationAction =
-  | { type: "SET_JOB_TITLE"; payload: string }
-  | { type: "SET_COMPANY"; payload: string }
-  | { type: "SET_SKILLS"; payload: string }
-  | { type: "SET_ADDITIONAL_DETAILS"; payload: string }
-  | { type: "SET_GENERATED_APPLICATION"; payload: string }
-  | { type: "SET_TITLE_TEXT"; payload: string }
-  | { type: "SET_IS_GENERATING"; payload: boolean }
-  | { type: "SET_APPLICATIONS_COUNT"; payload: number }
-  | { type: "SET_SAVED_APPLICATION_ID"; payload: string }
-  | { type: "SET_COUNT_LOADED"; payload: boolean }
-  | {
-      type: "SET_PROGRESS_HIGHLIGHT_COLOR";
-      payload: ProgressHighlightColor;
-    }
-  | {
-      type: "SET_VALIDATION_ERRORS";
-      payload: Partial<Record<keyof JobApplicationFormData, string>>;
-    }
-  | { type: "CLEAR_VALIDATION_ERROR"; payload: keyof JobApplicationFormData }
-  | { type: "RESET_FORM" }
-  | { type: "CLEAR_FORM_ONLY" };
-
-const EMPTY_FORM = {
-  jobTitle: "",
-  company: "",
-  skills: "",
-  additionalDetails: "",
-  generatedApplication: "",
-  titleText: UI_MESSAGES.newApplication,
-};
-
-function jobApplicationReducer(
-  state: JobApplicationState,
-  action: JobApplicationAction
-): JobApplicationState {
-  switch (action.type) {
-    case "SET_JOB_TITLE":
-      return { ...state, jobTitle: action.payload };
-    case "SET_COMPANY":
-      return { ...state, company: action.payload };
-    case "SET_SKILLS":
-      return { ...state, skills: action.payload };
-    case "SET_ADDITIONAL_DETAILS":
-      return { ...state, additionalDetails: action.payload };
-    case "SET_GENERATED_APPLICATION":
-      return { ...state, generatedApplication: action.payload };
-    case "SET_TITLE_TEXT":
-      return { ...state, titleText: action.payload };
-    case "SET_IS_GENERATING":
-      return { ...state, isGenerating: action.payload };
-    case "SET_APPLICATIONS_COUNT":
-      return { ...state, applicationsCount: action.payload };
-    case "SET_SAVED_APPLICATION_ID":
-      return { ...state, savedApplicationId: action.payload };
-    case "SET_COUNT_LOADED":
-      return { ...state, isCountLoaded: action.payload };
-    case "SET_PROGRESS_HIGHLIGHT_COLOR":
-      return { ...state, progressHighlightColor: action.payload };
-    case "SET_VALIDATION_ERRORS":
-      return { ...state, validationErrors: action.payload };
-    case "CLEAR_VALIDATION_ERROR":
-      return {
-        ...state,
-        validationErrors: {
-          ...state.validationErrors,
-          [action.payload]: undefined,
-        },
-      };
-    case "RESET_FORM":
-      return {
-        ...state,
-        ...EMPTY_FORM,
-        validationErrors: {},
-      };
-    case "CLEAR_FORM_ONLY":
-      return {
-        ...state,
-        ...EMPTY_FORM,
-        savedApplicationId: "",
-        validationErrors: {},
-      };
-    default:
-      return assertNever(action);
-  }
-}
+import type { JobApplicationState } from "../types";
+import { jobApplicationReducer } from "./jobApplicationReducer";
+import { useFormValidation } from "./useFormValidation";
+import { useTitleManager } from "./useTitleManager";
+import { useApplicationStorage } from "./useApplicationStorage";
 
 export function useJobApplication(initialApplicationsCount: number = 0) {
   const initialState: JobApplicationState = {
@@ -135,6 +27,17 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   const [state, dispatch] = useReducer(jobApplicationReducer, initialState);
   const { showToast } = useToast();
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const { handleFieldValidation, isFormValid, getFieldError, hasFieldError } =
+    useFormValidation(state, dispatch);
+  const { updateTitleFromFields, getTitleClassName } = useTitleManager(
+    state,
+    dispatch
+  );
+  const { autoSaveApplication, deleteSavedApplication } = useApplicationStorage(
+    state,
+    dispatch
+  );
 
   useEffect(() => {
     const applications = localStorageService.getApplications();
@@ -172,85 +75,8 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     };
   }, []);
 
-  const updateTitleFromFields = () => {
-    if (!state.jobTitle.trim() && !state.company.trim()) {
-      dispatch({ type: "SET_TITLE_TEXT", payload: UI_MESSAGES.newApplication });
-      return;
-    }
-
-    const parts = [];
-    if (state.jobTitle.trim()) {
-      parts.push(state.jobTitle.trim());
-    }
-    if (state.company.trim()) {
-      parts.push(state.company.trim());
-    }
-
-    dispatch({ type: "SET_TITLE_TEXT", payload: parts.join(", ") });
-  };
-
-  const getTitleClassName = (styles: Record<string, string>) => {
-    if (state.titleText === UI_MESSAGES.newApplication) {
-      return `title-primary ${styles.title} ${styles.titlePlaceholder}`;
-    }
-    return `title-primary ${styles.title}`;
-  };
-
   const isGenerateDisabled = () => {
-    const formData = {
-      jobTitle: state.jobTitle,
-      company: state.company,
-      skills: state.skills,
-      additionalDetails: state.additionalDetails,
-    };
-
-    const validation = validateJobApplicationForm(formData);
-    return !validation.success || state.isGenerating;
-  };
-
-  const autoSaveApplication = async (
-    content: string,
-    getSavedApplicationId: () => string
-  ) => {
-    const application = {
-      id: Date.now().toString(),
-      title: state.titleText,
-      company: state.company,
-      jobTitle: state.jobTitle,
-      content: content,
-      createdAt: new Date().toISOString(),
-    };
-
-    try {
-      const savedApplicationId = getSavedApplicationId();
-      if (savedApplicationId) {
-        localStorageService.deleteApplication(savedApplicationId);
-      }
-
-      const updatedApplications =
-        localStorageService.addApplication(application);
-
-      dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: application.id });
-
-      const previousCount = state.applicationsCount;
-
-      dispatch({
-        type: "SET_APPLICATIONS_COUNT",
-        payload: updatedApplications.length,
-      });
-
-      // to show "You've just reached the goal" dialog on the applications page
-      if (
-        updatedApplications.length === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
-        previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
-      ) {
-        sessionStorage.setItem(STORAGE_KEYS.GOAL_ACHIEVEMENT, "true");
-      }
-
-      window.dispatchEvent(new CustomEvent("applicationsUpdated"));
-    } catch (error) {
-      console.error("Error saving application:", error);
-    }
+    return !isFormValid() || state.isGenerating;
   };
 
   const handleGenerate = async () => {
@@ -333,23 +159,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       })
     );
 
-    const getSavedApplicationId = () => state.savedApplicationId;
-    const savedApplicationId = getSavedApplicationId();
-
-    if (savedApplicationId) {
-      try {
-        const updatedApplications =
-          localStorageService.deleteApplication(savedApplicationId);
-        dispatch({
-          type: "SET_APPLICATIONS_COUNT",
-          payload: updatedApplications.length,
-        });
-        dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: "" });
-        window.dispatchEvent(new CustomEvent("applicationsUpdated"));
-      } catch (error) {
-        console.error("Error deleting application:", error);
-      }
-    }
+    await deleteSavedApplication(() => state.savedApplicationId);
     dispatch({ type: "SET_GENERATED_APPLICATION", payload: "" });
   };
 
@@ -366,21 +176,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     dispatch({ type: "RESET_FORM" });
   };
 
-  const handleFieldValidation = (
-    fieldName: keyof JobApplicationFormData,
-    value: string
-  ) => {
-    const validation = validateField(fieldName, value);
-    if (!validation.success && validation.error) {
-      dispatch({
-        type: "SET_VALIDATION_ERRORS",
-        payload: { ...state.validationErrors, [fieldName]: validation.error },
-      });
-    } else {
-      dispatch({ type: "CLEAR_VALIDATION_ERROR", payload: fieldName });
-    }
-  };
-
+  // Field change handlers
   const handleJobTitleChange = (value: string) => {
     dispatch({ type: "SET_JOB_TITLE", payload: value });
     handleFieldValidation("jobTitle", value);
@@ -407,14 +203,6 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
   const handleCompanyBlur = () => {
     updateTitleFromFields();
-  };
-
-  const getFieldError = (fieldName: keyof JobApplicationFormData) => {
-    return state.validationErrors[fieldName];
-  };
-
-  const hasFieldError = (fieldName: keyof JobApplicationFormData) => {
-    return Boolean(state.validationErrors[fieldName]);
   };
 
   return {
