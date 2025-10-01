@@ -24,10 +24,21 @@ const Header = ({ initialApplicationCount }: HeaderProps) => {
     router.push("/applications");
   };
 
+  const handleLogoClick = () => {
+    window.dispatchEvent(new CustomEvent("navigationStarted"));
+    router.push("/");
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <Logo width={179} height={48} className={styles.logo} />
+        <button 
+          onClick={handleLogoClick}
+          className={styles.logoButton}
+          aria-label="Go to home page"
+        >
+          <Logo width={179} height={48} className={styles.logo} />
+        </button>
 
         <div className={styles.right}>
           <div className={styles.progressWrapper}>

@@ -36,11 +36,13 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
   const { handleFieldValidation, isFormValid, getFieldError, hasFieldError } =
     createFormValidation({ state, dispatch });
+
   const { updateTitleFromFields, getTitleClassName } =
     createTitleManagerHelpers({
       state,
       dispatch,
     });
+
   const { autoSaveApplication, deleteSavedApplication } =
     createApplicationStorageHelpers({
       state,
