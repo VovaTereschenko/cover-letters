@@ -32,7 +32,7 @@ const Header = ({ initialApplicationCount }: HeaderProps) => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <button 
+        <button
           onClick={handleLogoClick}
           className={styles.logoButton}
           aria-label="Go to home page"
