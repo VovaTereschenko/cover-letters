@@ -32,8 +32,11 @@ export const handleGenerationSuccess = async ({
   autoSaveApplication: (content: string) => Promise<void>;
 }) => {
   onGeneratedApplicationChange(coverLetter);
+
   showToast(UI_MESSAGES.toasts.generatedSuccessfully, "save");
+
   await new Promise((resolve) => setTimeout(resolve, 100));
+
   await autoSaveApplication(coverLetter);
 };
 
@@ -53,8 +56,12 @@ export const handleGenerationError = async ({
   }
 
   const fallbackApplication = AI_PROMPTS.fallbackTemplate("", "", "", "");
+
   onGeneratedApplicationChange(fallbackApplication);
+
   showToast(UI_MESSAGES.toasts.generatedWithFallback, "save");
+
   await new Promise((resolve) => setTimeout(resolve, 100));
+
   await autoSaveApplication(fallbackApplication);
 };
