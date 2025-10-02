@@ -1,11 +1,10 @@
 import { localStorageService } from "@/lib/localStorage";
 
 export const deleteSavedApplication = async (
-  getSavedApplicationId: () => string,
+  savedApplicationId: string,
   onApplicationsCountChange: (count: number) => void,
   onSavedApplicationIdChange: (id: string) => void
 ) => {
-  const savedApplicationId = getSavedApplicationId();
   if (!savedApplicationId) return;
 
   try {

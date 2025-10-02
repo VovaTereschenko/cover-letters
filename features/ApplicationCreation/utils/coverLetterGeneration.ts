@@ -25,23 +25,16 @@ export const handleGenerationSuccess = async ({
   onGeneratedApplicationChange,
   showToast,
   autoSaveApplication,
-  getSavedApplicationId,
 }: {
   coverLetter: string;
   onGeneratedApplicationChange: (coverLetter: string) => void;
   showToast: (message: string, type?: ToastType) => void;
-  autoSaveApplication: (
-    content: string,
-    getSavedApplicationId: () => string
-  ) => Promise<void>;
-  getSavedApplicationId: () => string;
+  autoSaveApplication: (content: string) => Promise<void>;
 }) => {
   onGeneratedApplicationChange(coverLetter);
-
   showToast(UI_MESSAGES.toasts.generatedSuccessfully, "save");
-
   await new Promise((resolve) => setTimeout(resolve, 100));
-  await autoSaveApplication(coverLetter, getSavedApplicationId);
+  await autoSaveApplication(coverLetter);
 };
 
 export const handleGenerationError = async ({
@@ -49,28 +42,19 @@ export const handleGenerationError = async ({
   onGeneratedApplicationChange,
   showToast,
   autoSaveApplication,
-  getSavedApplicationId,
 }: {
   error: unknown;
   onGeneratedApplicationChange: (coverLetter: string) => void;
   showToast: (message: string, type?: ToastType) => void;
-  autoSaveApplication: (
-    content: string,
-    getSavedApplicationId: () => string
-  ) => Promise<void>;
-  getSavedApplicationId: () => string;
+  autoSaveApplication: (content: string) => Promise<void>;
 }) => {
   if (!(error instanceof Error && error.name === "AbortError")) {
     console.error("Generation error:", error);
   }
 
   const fallbackApplication = AI_PROMPTS.fallbackTemplate("", "", "", "");
-
   onGeneratedApplicationChange(fallbackApplication);
-
   showToast(UI_MESSAGES.toasts.generatedWithFallback, "save");
-
   await new Promise((resolve) => setTimeout(resolve, 100));
-
-  await autoSaveApplication(fallbackApplication, getSavedApplicationId);
+  await autoSaveApplication(fallbackApplication);
 };

@@ -1,30 +1,35 @@
 import { localStorageService } from "@/lib/localStorage";
-import type { JobApplicationState, JobApplicationAction } from "../types";
 import { handleGoalAchievement } from "./goalAchievement";
-import { deleteSavedApplication as deleteSavedApplicationUtil } from "./applicationStorage";
+import { deleteSavedApplication } from "./applicationStorage";
 
 export function createApplicationStorageHelpers({
-  state,
-  dispatch,
+  titleText,
+  company,
+  jobTitle,
+  applicationsCount,
+  savedApplicationId,
+  onSavedApplicationIdChange,
+  onApplicationsCountChange,
 }: {
-  state: JobApplicationState;
-  dispatch: React.Dispatch<JobApplicationAction>;
+  titleText: string;
+  company: string;
+  jobTitle: string;
+  applicationsCount: number;
+  savedApplicationId: string;
+  onSavedApplicationIdChange: (id: string) => void;
+  onApplicationsCountChange: (count: number) => void;
 }) {
-  const saveApplication = async (
-    content: string,
-    getSavedApplicationId: () => string
-  ) => {
+  const saveApplication = async (content: string) => {
     const application = {
       id: Date.now().toString(),
-      title: state.titleText,
-      company: state.company,
-      jobTitle: state.jobTitle,
+      title: titleText,
+      company: company,
+      jobTitle: jobTitle,
       content: content,
       createdAt: new Date().toISOString(),
     };
 
     try {
-      const savedApplicationId = getSavedApplicationId();
       if (savedApplicationId) {
         localStorageService.deleteApplication(savedApplicationId);
       }
@@ -32,14 +37,11 @@ export function createApplicationStorageHelpers({
       const updatedApplications =
         localStorageService.addApplication(application);
 
-      dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: application.id });
+      onSavedApplicationIdChange(application.id);
 
-      const previousCount = state.applicationsCount;
+      const previousCount = applicationsCount;
 
-      dispatch({
-        type: "SET_APPLICATIONS_COUNT",
-        payload: updatedApplications.length,
-      });
+      onApplicationsCountChange(updatedApplications.length);
 
       handleGoalAchievement(updatedApplications.length, previousCount);
 
@@ -49,15 +51,11 @@ export function createApplicationStorageHelpers({
     }
   };
 
-  const removeApplication = (getSavedApplicationId: () => string) =>
-    deleteSavedApplicationUtil(
-      getSavedApplicationId,
-      (count: number) => {
-        dispatch({ type: "SET_APPLICATIONS_COUNT", payload: count });
-      },
-      (id: string) => {
-        dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: id });
-      }
+  const removeApplication = () =>
+    deleteSavedApplication(
+      savedApplicationId,
+      onApplicationsCountChange,
+      onSavedApplicationIdChange
     );
 
   return {

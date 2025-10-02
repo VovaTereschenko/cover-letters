@@ -38,14 +38,27 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
   const { updateTitleFromFields, getTitleClassName } =
     createTitleManagerHelpers({
-      state,
-      dispatch,
+      jobTitle: state.jobTitle,
+      company: state.company,
+      titleText: state.titleText,
+      onTitleChange: (title: string) => {
+        dispatch({ type: "SET_TITLE_TEXT", payload: title });
+      },
     });
 
   const { autoSaveApplication, deleteSavedApplication } =
     createApplicationStorageHelpers({
-      state,
-      dispatch,
+      titleText: state.titleText,
+      company: state.company,
+      jobTitle: state.jobTitle,
+      applicationsCount: state.applicationsCount,
+      savedApplicationId: state.savedApplicationId,
+      onSavedApplicationIdChange: (id: string) => {
+        dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: id });
+      },
+      onApplicationsCountChange: (count: number) => {
+        dispatch({ type: "SET_APPLICATIONS_COUNT", payload: count });
+      },
     });
 
   const handleCountChange = useCallback((count: number) => {
@@ -110,7 +123,6 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
         },
         showToast,
         autoSaveApplication,
-        getSavedApplicationId: () => state.savedApplicationId,
       });
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -124,7 +136,6 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
         },
         showToast,
         autoSaveApplication,
-        getSavedApplicationId: () => state.savedApplicationId,
       });
     } finally {
       dispatch({ type: "SET_IS_GENERATING", payload: false });
@@ -138,7 +149,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       })
     );
 
-    await deleteSavedApplication(() => state.savedApplicationId);
+    await deleteSavedApplication();
     dispatch({ type: "SET_GENERATED_APPLICATION", payload: "" });
   };
 

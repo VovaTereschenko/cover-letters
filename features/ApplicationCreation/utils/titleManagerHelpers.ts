@@ -1,21 +1,22 @@
-import type { JobApplicationState, JobApplicationAction } from "../types";
 import { updateTitleFromFields, getTitleClassName } from "./titleManagement";
 
 export function createTitleManagerHelpers({
-  state,
-  dispatch,
+  jobTitle,
+  company,
+  titleText,
+  onTitleChange,
 }: {
-  state: JobApplicationState;
-  dispatch: React.Dispatch<JobApplicationAction>;
+  jobTitle: string;
+  company: string;
+  titleText: string;
+  onTitleChange: (title: string) => void;
 }) {
   const updateTitle = () => {
-    updateTitleFromFields(state.jobTitle, state.company, (title: string) => {
-      dispatch({ type: "SET_TITLE_TEXT", payload: title });
-    });
+    updateTitleFromFields(jobTitle, company, onTitleChange);
   };
 
   const getClassName = (styles: Record<string, string>) => {
-    return getTitleClassName(state.titleText, styles);
+    return getTitleClassName(titleText, styles);
   };
 
   return {
