@@ -1,5 +1,4 @@
 import { localStorageService } from "@/lib/localStorage";
-import type { JobApplicationAction } from "../types";
 import { handleGoalAchievement } from "./goalAchievement";
 
 export const autoSaveApplication = async (
@@ -11,7 +10,8 @@ export const autoSaveApplication = async (
     jobTitle: string;
     applicationsCount: number;
   },
-  dispatch: React.Dispatch<JobApplicationAction>
+  onSavedApplicationIdChange: (id: string) => void,
+  onApplicationsCountChange: (count: number) => void
 ) => {
   const application = {
     id: Date.now().toString(),
@@ -30,14 +30,11 @@ export const autoSaveApplication = async (
 
     const updatedApplications = localStorageService.addApplication(application);
 
-    dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: application.id });
+    onSavedApplicationIdChange(application.id);
 
     const previousCount = applicationData.applicationsCount;
 
-    dispatch({
-      type: "SET_APPLICATIONS_COUNT",
-      payload: updatedApplications.length,
-    });
+    onApplicationsCountChange(updatedApplications.length);
 
     handleGoalAchievement(updatedApplications.length, previousCount);
 
@@ -49,7 +46,8 @@ export const autoSaveApplication = async (
 
 export const deleteSavedApplication = async (
   getSavedApplicationId: () => string,
-  dispatch: React.Dispatch<JobApplicationAction>
+  onApplicationsCountChange: (count: number) => void,
+  onSavedApplicationIdChange: (id: string) => void
 ) => {
   const savedApplicationId = getSavedApplicationId();
   if (!savedApplicationId) return;
@@ -57,11 +55,8 @@ export const deleteSavedApplication = async (
   try {
     const updatedApplications =
       localStorageService.deleteApplication(savedApplicationId);
-    dispatch({
-      type: "SET_APPLICATIONS_COUNT",
-      payload: updatedApplications.length,
-    });
-    dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: "" });
+    onApplicationsCountChange(updatedApplications.length);
+    onSavedApplicationIdChange("");
     window.dispatchEvent(new CustomEvent("applicationsUpdated"));
   } catch (error) {
     console.error("Error deleting application:", error);

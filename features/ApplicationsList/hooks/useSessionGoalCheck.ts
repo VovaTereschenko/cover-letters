@@ -1,18 +1,14 @@
 import { useSessionGoalCheck as useSharedSessionGoalCheck } from "@/hooks/shared";
-import type { ApplicationsAction } from "../types";
 
 export function useSessionGoalCheck({
   initialApplicationsLength,
-  dispatch,
+  onGoalAchieved,
 }: {
   initialApplicationsLength: number;
-  dispatch: React.Dispatch<ApplicationsAction>;
+  onGoalAchieved: () => void;
 }) {
   useSharedSessionGoalCheck({
     applicationCount: initialApplicationsLength,
-    dispatch,
-    showGoalAchievementAction: (): ApplicationsAction => ({
-      type: "SHOW_GOAL_ACHIEVEMENT",
-    }),
+    onGoalAchieved,
   });
 }

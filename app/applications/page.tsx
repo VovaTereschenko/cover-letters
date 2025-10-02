@@ -1,4 +1,3 @@
-import { getApplications } from "@/lib/applications";
 import { getApplicationCountFromCookies } from "@/lib/cookies";
 import { ApplicationsList } from "@/features/ApplicationsList";
 import { ApplicationsCountProvider } from "@/contexts/ApplicationsCountContext";
@@ -15,16 +14,13 @@ function createPlaceholderApplications(count: number) {
 }
 
 export default async function ApplicationsPage() {
-  const applications = await getApplications();
   const serverApplicationCount = await getApplicationCountFromCookies();
 
-  const initialApplications =
-    serverApplicationCount > 0
-      ? createPlaceholderApplications(serverApplicationCount)
-      : applications;
+  const initialApplications = createPlaceholderApplications(
+    serverApplicationCount
+  );
 
-  const initialCount =
-    serverApplicationCount > 0 ? serverApplicationCount : applications.length;
+  const initialCount = serverApplicationCount;
 
   return (
     <ApplicationsCountProvider initialCount={initialCount}>

@@ -1,22 +1,21 @@
 import { useEffect } from "react";
 import { SavedApplication } from "@/types";
-import type { ApplicationsAction } from "../types";
 import { initializeApplications } from "../utils/applicationOperations";
 
 export function useApplicationsInitialization({
-  initialApplications,
-  dispatch,
-  setApplicationsCount,
+  onApplicationsChange,
+  onApplicationsCountChange,
+  onHydrated,
 }: {
-  initialApplications: SavedApplication[];
-  dispatch: React.Dispatch<ApplicationsAction>;
-  setApplicationsCount: (count: number) => void;
+  onApplicationsChange: (applications: SavedApplication[]) => void;
+  onApplicationsCountChange: (count: number) => void;
+  onHydrated: () => void;
 }) {
   useEffect(() => {
     initializeApplications({
-      initialApplications,
-      dispatch,
-      setApplicationsCount,
+      onApplicationsChange,
+      onApplicationsCountChange,
+      onHydrated,
     });
-  }, [initialApplications, setApplicationsCount, dispatch]);
+  }, [onApplicationsChange, onApplicationsCountChange, onHydrated]);
 }

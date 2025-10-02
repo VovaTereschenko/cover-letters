@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS, STORAGE_KEYS } from "@/constants";
 
-export function useSessionGoalCheck<TAction>({
+export function useSessionGoalCheck({
   applicationCount,
-  dispatch,
-  showGoalAchievementAction,
+  onGoalAchieved,
 }: {
   applicationCount: number;
-  dispatch: React.Dispatch<TAction>;
-  showGoalAchievementAction: () => TAction;
+  onGoalAchieved: () => void;
 }) {
   useEffect(() => {
     const justReachedTheGoal =
@@ -23,7 +21,7 @@ export function useSessionGoalCheck<TAction>({
       const showGoalAchievement = async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
         if (!isCancelled) {
-          dispatch(showGoalAchievementAction());
+          onGoalAchieved();
           sessionStorage.removeItem(STORAGE_KEYS.GOAL_ACHIEVEMENT);
         }
       };
@@ -34,5 +32,5 @@ export function useSessionGoalCheck<TAction>({
         isCancelled = true;
       };
     }
-  }, [applicationCount, dispatch, showGoalAchievementAction]);
+  }, [applicationCount, onGoalAchieved]);
 }

@@ -1,10 +1,10 @@
 import type { JobApplicationFormData } from "@/lib/validations";
 import type { JobApplicationState, JobApplicationAction } from "../types";
 import {
-  handleFieldValidation as handleFieldValidationUtility,
-  isFormValid as isFormValidUtility,
-  getFieldError as getFieldErrorUtility,
-  hasFieldError as hasFieldErrorUtility,
+  handleFieldValidation,
+  isFormValid,
+  getFieldError,
+  hasFieldError,
 } from "../utils/formValidation";
 
 export function createFormValidation({
@@ -14,19 +14,24 @@ export function createFormValidation({
   state: JobApplicationState;
   dispatch: React.Dispatch<JobApplicationAction>;
 }) {
-  const handleFieldValidation = (
+  const validateField = (
     fieldName: keyof JobApplicationFormData,
     value: string
   ) => {
-    handleFieldValidationUtility(
+    handleFieldValidation(
       fieldName,
       value,
       state.validationErrors,
-      dispatch
+      (errors) => {
+        dispatch({ type: "SET_VALIDATION_ERRORS", payload: errors });
+      },
+      (fieldName) => {
+        dispatch({ type: "CLEAR_VALIDATION_ERROR", payload: fieldName });
+      }
     );
   };
 
-  const isFormValid = () => {
+  const checkFormValidity = () => {
     const formData = {
       jobTitle: state.jobTitle,
       company: state.company,
@@ -34,19 +39,19 @@ export function createFormValidation({
       additionalDetails: state.additionalDetails,
     };
 
-    return isFormValidUtility(formData);
+    return isFormValid(formData);
   };
 
-  const getFieldError = (fieldName: keyof JobApplicationFormData) =>
-    getFieldErrorUtility(fieldName, state.validationErrors);
+  const getErrorForField = (fieldName: keyof JobApplicationFormData) =>
+    getFieldError(fieldName, state.validationErrors);
 
-  const hasFieldError = (fieldName: keyof JobApplicationFormData) =>
-    hasFieldErrorUtility(fieldName, state.validationErrors);
+  const checkFieldHasError = (fieldName: keyof JobApplicationFormData) =>
+    hasFieldError(fieldName, state.validationErrors);
 
   return {
-    handleFieldValidation,
-    isFormValid,
-    getFieldError,
-    hasFieldError,
+    handleFieldValidation: validateField,
+    isFormValid: checkFormValidity,
+    getFieldError: getErrorForField,
+    hasFieldError: checkFieldHasError,
   };
 }

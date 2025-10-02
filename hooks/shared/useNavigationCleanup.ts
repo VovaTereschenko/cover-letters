@@ -1,25 +1,26 @@
 import { useEffect } from "react";
 
-export function useNavigationCleanup<TAction>({
+export function useNavigationCleanup({
   abortControllerRef,
-  dispatch,
-  cleanupAction,
+  onNavigationCleanup,
+  onBeforeUnload,
 }: {
   abortControllerRef: React.RefObject<AbortController | null>;
-  dispatch: React.Dispatch<TAction>;
-  cleanupAction: () => TAction;
+  onNavigationCleanup: () => void;
+  onBeforeUnload?: () => void;
 }) {
   useEffect(() => {
     const handleNavigation = () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
-        dispatch(cleanupAction());
+        onNavigationCleanup();
       }
     };
 
     const handleBeforeUnload = () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
+        onBeforeUnload?.();
       }
     };
 
@@ -30,5 +31,5 @@ export function useNavigationCleanup<TAction>({
       window.removeEventListener("navigationStarted", handleNavigation);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [abortControllerRef, dispatch, cleanupAction]);
+  }, [abortControllerRef, onNavigationCleanup, onBeforeUnload]);
 }

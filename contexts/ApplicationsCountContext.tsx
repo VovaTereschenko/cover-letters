@@ -47,17 +47,10 @@ export const ApplicationsCountProvider = ({
 
     updateFromLocalStorage();
 
-    const handleApplicationsUpdate = () => {
-      updateFromLocalStorage();
-    };
-
-    window.addEventListener("applicationsUpdated", handleApplicationsUpdate);
+    window.addEventListener("applicationsUpdated", updateFromLocalStorage);
 
     return () => {
-      window.removeEventListener(
-        "applicationsUpdated",
-        handleApplicationsUpdate
-      );
+      window.removeEventListener("applicationsUpdated", updateFromLocalStorage);
     };
   }, []);
 

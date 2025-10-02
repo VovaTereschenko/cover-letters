@@ -1,29 +1,21 @@
 import { useEffect, useCallback, useRef } from "react";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 
-export function useGoalAchievementTracking<TAction>({
+export function useGoalAchievementTracking({
   currentCount,
   previousCount,
-  dispatch,
-  showGoalAchievementAction,
-  setPreviousCountAction,
+  onGoalAchieved,
+  onCountUpdate,
 }: {
   currentCount: number;
   previousCount: number;
-  dispatch: React.Dispatch<TAction>;
-  showGoalAchievementAction: () => TAction;
-  setPreviousCountAction: (count: number) => TAction;
+  onGoalAchieved: () => void;
+  onCountUpdate: (count: number) => void;
 }) {
   const lastProcessedCount = useRef<number>(previousCount);
 
-  const memoizedShowGoalAction = useCallback(
-    () => showGoalAchievementAction(),
-    [showGoalAchievementAction]
-  );
-  const memoizedSetPreviousAction = useCallback(
-    (count: number) => setPreviousCountAction(count),
-    [setPreviousCountAction]
-  );
+  const memoizedOnGoalAchieved = useCallback(onGoalAchieved, [onGoalAchieved]);
+  const memoizedOnCountUpdate = useCallback(onCountUpdate, [onCountUpdate]);
 
   useEffect(() => {
     if (lastProcessedCount.current !== currentCount) {
@@ -31,16 +23,15 @@ export function useGoalAchievementTracking<TAction>({
         currentCount === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
         previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
       ) {
-        dispatch(memoizedShowGoalAction());
+        memoizedOnGoalAchieved();
       }
-      dispatch(memoizedSetPreviousAction(currentCount));
+      memoizedOnCountUpdate(currentCount);
       lastProcessedCount.current = currentCount;
     }
   }, [
     currentCount,
     previousCount,
-    dispatch,
-    memoizedShowGoalAction,
-    memoizedSetPreviousAction,
+    memoizedOnGoalAchieved,
+    memoizedOnCountUpdate,
   ]);
 }

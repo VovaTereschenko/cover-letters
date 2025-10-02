@@ -1,5 +1,4 @@
 import { UI_MESSAGES, AI_PROMPTS } from "@/constants/ai";
-import type { JobApplicationAction } from "../types";
 import type { ToastType } from "@/types";
 
 export const createCoverLetterRequest = (
@@ -23,13 +22,13 @@ export const createCoverLetterRequest = (
 
 export const handleGenerationSuccess = async ({
   coverLetter,
-  dispatch,
+  onGeneratedApplicationChange,
   showToast,
   autoSaveApplication,
   getSavedApplicationId,
 }: {
   coverLetter: string;
-  dispatch: (action: JobApplicationAction) => void;
+  onGeneratedApplicationChange: (coverLetter: string) => void;
   showToast: (message: string, type?: ToastType) => void;
   autoSaveApplication: (
     content: string,
@@ -37,10 +36,7 @@ export const handleGenerationSuccess = async ({
   ) => Promise<void>;
   getSavedApplicationId: () => string;
 }) => {
-  dispatch({
-    type: "SET_GENERATED_APPLICATION",
-    payload: coverLetter,
-  });
+  onGeneratedApplicationChange(coverLetter);
 
   showToast(UI_MESSAGES.toasts.generatedSuccessfully, "save");
 
@@ -50,13 +46,13 @@ export const handleGenerationSuccess = async ({
 
 export const handleGenerationError = async ({
   error,
-  dispatch,
+  onGeneratedApplicationChange,
   showToast,
   autoSaveApplication,
   getSavedApplicationId,
 }: {
   error: unknown;
-  dispatch: (action: JobApplicationAction) => void;
+  onGeneratedApplicationChange: (coverLetter: string) => void;
   showToast: (message: string, type?: ToastType) => void;
   autoSaveApplication: (
     content: string,
@@ -68,13 +64,11 @@ export const handleGenerationError = async ({
 
   const fallbackApplication = AI_PROMPTS.fallbackTemplate("", "", "", "");
 
-  dispatch({
-    type: "SET_GENERATED_APPLICATION",
-    payload: fallbackApplication,
-  });
+  onGeneratedApplicationChange(fallbackApplication);
 
   showToast(UI_MESSAGES.toasts.generatedWithFallback, "save");
 
   await new Promise((resolve) => setTimeout(resolve, 100));
+
   await autoSaveApplication(fallbackApplication, getSavedApplicationId);
 };

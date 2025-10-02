@@ -1,4 +1,4 @@
-import { useReducer, useRef } from "react";
+import { useReducer, useRef, useCallback } from "react";
 import { useToast } from "@/contexts/ToastContext";
 import { UI_MESSAGES } from "@/constants/ai";
 import type { JobApplicationState } from "../types";
@@ -49,8 +49,25 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       dispatch,
     });
 
-  useApplicationsCountSync(initialApplicationsCount, dispatch);
-  useNavigationCleanup(abortControllerRef, dispatch);
+  const handleCountChange = useCallback((count: number) => {
+    dispatch({ type: "SET_APPLICATIONS_COUNT", payload: count });
+  }, []);
+
+  const handleNavigationCleanup = useCallback(() => {
+    dispatch({ type: "SET_IS_GENERATING", payload: false });
+  }, []);
+
+  const handleBeforeUnload = useCallback(() => {
+    dispatch({ type: "SET_IS_GENERATING", payload: false });
+  }, []);
+
+  useApplicationsCountSync(initialApplicationsCount, handleCountChange);
+
+  useNavigationCleanup(
+    abortControllerRef,
+    handleNavigationCleanup,
+    handleBeforeUnload
+  );
 
   const isGenerateDisabled = () => {
     return !isFormValid() || state.isGenerating;
@@ -90,7 +107,9 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
       await handleGenerationSuccess({
         coverLetter: data.coverLetter,
-        dispatch,
+        onGeneratedApplicationChange: (coverLetter: string) => {
+          dispatch({ type: "SET_GENERATED_APPLICATION", payload: coverLetter });
+        },
         showToast,
         autoSaveApplication,
         getSavedApplicationId: () => state.savedApplicationId,
@@ -98,7 +117,9 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     } catch (error) {
       await handleGenerationError({
         error,
-        dispatch,
+        onGeneratedApplicationChange: (coverLetter: string) => {
+          dispatch({ type: "SET_GENERATED_APPLICATION", payload: coverLetter });
+        },
         showToast,
         autoSaveApplication,
         getSavedApplicationId: () => state.savedApplicationId,

@@ -1,25 +1,24 @@
 import { localStorageService } from "@/lib/localStorage";
 import { SavedApplication, ToastType } from "@/types";
-import type { ApplicationsAction } from "../types";
 
 export const updateApplicationContent = async ({
   applicationId,
   content,
-  dispatch,
-  setApplicationsCount,
+  onApplicationsChange,
+  onApplicationsCountChange,
 }: {
   applicationId: string;
   content: string;
-  dispatch: (action: ApplicationsAction) => void;
-  setApplicationsCount: (count: number) => void;
+  onApplicationsChange: (applications: SavedApplication[]) => void;
+  onApplicationsCountChange: (count: number) => void;
 }) => {
   try {
     const updatedApplications = localStorageService.updateApplication(
       applicationId,
       { content }
     );
-    dispatch({ type: "SET_APPLICATIONS", payload: updatedApplications });
-    setApplicationsCount(updatedApplications.length);
+    onApplicationsChange(updatedApplications);
+    onApplicationsCountChange(updatedApplications.length);
     window.dispatchEvent(new CustomEvent("applicationsUpdated"));
   } catch (error) {
     console.error("Error updating application:", error);
@@ -28,25 +27,27 @@ export const updateApplicationContent = async ({
 
 export const deleteApplication = async ({
   applicationId,
-  dispatch,
-  setApplicationsCount,
-  showToast,
+  onApplicationsChange,
+  onApplicationsCountChange,
+  onSuccess,
+  onError,
 }: {
   applicationId: string;
-  dispatch: (action: ApplicationsAction) => void;
-  setApplicationsCount: (count: number) => void;
-  showToast: (message: string, type?: ToastType) => void;
+  onApplicationsChange: (applications: SavedApplication[]) => void;
+  onApplicationsCountChange: (count: number) => void;
+  onSuccess: () => void;
+  onError: () => void;
 }) => {
   try {
     const updatedApplications =
       localStorageService.deleteApplication(applicationId);
-    dispatch({ type: "SET_APPLICATIONS", payload: updatedApplications });
-    setApplicationsCount(updatedApplications.length);
+    onApplicationsChange(updatedApplications);
+    onApplicationsCountChange(updatedApplications.length);
     window.dispatchEvent(new CustomEvent("applicationsUpdated"));
-    showToast("Application deleted successfully!", "delete");
+    onSuccess();
   } catch (error) {
     console.error("Error deleting application:", error);
-    showToast("Failed to delete application. Please try again.", "error");
+    onError();
   }
 };
 
@@ -62,31 +63,24 @@ export const copyToClipboard = ({
 };
 
 export const initializeApplications = ({
-  initialApplications,
-  dispatch,
-  setApplicationsCount,
+  onApplicationsChange,
+  onApplicationsCountChange,
+  onHydrated,
 }: {
-  initialApplications: SavedApplication[];
-  dispatch: (action: ApplicationsAction) => void;
-  setApplicationsCount: (count: number) => void;
+  onApplicationsChange: (applications: SavedApplication[]) => void;
+  onApplicationsCountChange: (count: number) => void;
+  onHydrated: () => void;
 }) => {
   const storedApplications = localStorageService.getApplications();
 
-  const hasPlaceholders = initialApplications.some((app) =>
-    app.id.startsWith("placeholder-")
-  );
-
   if (storedApplications.length) {
-    dispatch({ type: "SET_APPLICATIONS", payload: storedApplications });
-    setApplicationsCount(storedApplications.length);
-  } else if (!hasPlaceholders) {
-    localStorageService.saveApplications(initialApplications);
-    setApplicationsCount(initialApplications.length);
+    onApplicationsChange(storedApplications);
+    onApplicationsCountChange(storedApplications.length);
   } else {
-    dispatch({ type: "SET_APPLICATIONS", payload: [] });
-    setApplicationsCount(0);
+    onApplicationsChange([]);
+    onApplicationsCountChange(0);
   }
 
-  dispatch({ type: "SET_HYDRATED", payload: true });
+  onHydrated();
   window.dispatchEvent(new CustomEvent("applicationsUpdated"));
 };

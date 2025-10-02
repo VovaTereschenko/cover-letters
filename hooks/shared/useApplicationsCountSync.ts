@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { localStorageService } from "@/lib/localStorage";
 
-export function useApplicationsCountSync<TAction>({
+/**
+ * Abstract hook for synchronizing applications count with localStorage
+ * Can be used by both ApplicationCreation and ApplicationsList features
+ */
+export function useApplicationsCountSync({
   initialCount,
-  dispatch,
-  setCountAction,
+  onCountChange,
 }: {
   initialCount: number;
-  dispatch: React.Dispatch<TAction>;
-  setCountAction: (count: number) => TAction;
+  onCountChange: (count: number) => void;
 }) {
   useEffect(() => {
     const applications = localStorageService.getApplications();
@@ -16,6 +18,6 @@ export function useApplicationsCountSync<TAction>({
 
     if (actualCount === initialCount) return;
 
-    dispatch(setCountAction(actualCount));
-  }, [initialCount, dispatch, setCountAction]);
+    onCountChange(actualCount);
+  }, [initialCount, onCountChange]);
 }

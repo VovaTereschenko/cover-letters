@@ -1,25 +1,20 @@
 import { useGoalAchievementTracking as useSharedGoalAchievementTracking } from "@/hooks/shared";
-import type { ApplicationsAction } from "../types";
 
 export function useGoalAchievementTracking({
   applicationsLength,
   previousCount,
-  dispatch,
+  onGoalAchieved,
+  onCountUpdate,
 }: {
   applicationsLength: number;
   previousCount: number;
-  dispatch: React.Dispatch<ApplicationsAction>;
+  onGoalAchieved: () => void;
+  onCountUpdate: (count: number) => void;
 }) {
   useSharedGoalAchievementTracking({
     currentCount: applicationsLength,
     previousCount,
-    dispatch,
-    showGoalAchievementAction: (): ApplicationsAction => ({
-      type: "SHOW_GOAL_ACHIEVEMENT",
-    }),
-    setPreviousCountAction: (count: number): ApplicationsAction => ({
-      type: "SET_PREVIOUS_COUNT",
-      payload: count,
-    }),
+    onGoalAchieved,
+    onCountUpdate,
   });
 }

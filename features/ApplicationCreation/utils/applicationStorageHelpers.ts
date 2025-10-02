@@ -1,7 +1,7 @@
 import { localStorageService } from "@/lib/localStorage";
 import type { JobApplicationState, JobApplicationAction } from "../types";
 import { handleGoalAchievement } from "./goalAchievement";
-import { deleteSavedApplication } from "./applicationStorage";
+import { deleteSavedApplication as deleteSavedApplicationUtil } from "./applicationStorage";
 
 export function createApplicationStorageHelpers({
   state,
@@ -10,7 +10,7 @@ export function createApplicationStorageHelpers({
   state: JobApplicationState;
   dispatch: React.Dispatch<JobApplicationAction>;
 }) {
-  const autoSaveApplication = async (
+  const saveApplication = async (
     content: string,
     getSavedApplicationId: () => string
   ) => {
@@ -49,9 +49,19 @@ export function createApplicationStorageHelpers({
     }
   };
 
+  const removeApplication = (getSavedApplicationId: () => string) =>
+    deleteSavedApplicationUtil(
+      getSavedApplicationId,
+      (count: number) => {
+        dispatch({ type: "SET_APPLICATIONS_COUNT", payload: count });
+      },
+      (id: string) => {
+        dispatch({ type: "SET_SAVED_APPLICATION_ID", payload: id });
+      }
+    );
+
   return {
-    autoSaveApplication,
-    deleteSavedApplication: (getSavedApplicationId: () => string) =>
-      deleteSavedApplication(getSavedApplicationId, dispatch),
+    autoSaveApplication: saveApplication,
+    deleteSavedApplication: removeApplication,
   };
 }

@@ -3,22 +3,24 @@ import {
   validateJobApplicationForm,
   type JobApplicationFormData,
 } from "@/lib/validations";
-import type { JobApplicationAction } from "../types";
 
 export const handleFieldValidation = (
   fieldName: keyof JobApplicationFormData,
   value: string,
   validationErrors: Partial<Record<keyof JobApplicationFormData, string>>,
-  dispatch: React.Dispatch<JobApplicationAction>
+  onValidationError: (
+    errors: Partial<Record<keyof JobApplicationFormData, string>>
+  ) => void,
+  onClearError: (fieldName: keyof JobApplicationFormData) => void
 ) => {
   const validation = validateField(fieldName, value);
   if (!validation.success && validation.error) {
-    dispatch({
-      type: "SET_VALIDATION_ERRORS",
-      payload: { ...validationErrors, [fieldName]: validation.error },
+    onValidationError({
+      ...validationErrors,
+      [fieldName]: validation.error,
     });
   } else {
-    dispatch({ type: "CLEAR_VALIDATION_ERROR", payload: fieldName });
+    onClearError(fieldName);
   }
 };
 

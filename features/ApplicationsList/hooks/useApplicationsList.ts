@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useCallback } from "react";
 import { useApplicationsCount } from "@/contexts/ApplicationsCountContext";
 import { useToast } from "@/contexts/ToastContext";
 import { SavedApplication } from "@/types";
@@ -30,21 +30,48 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
   const { setApplicationsCount } = useApplicationsCount();
   const { showToast } = useToast();
 
+  const handleApplicationsChange = useCallback(
+    (applications: SavedApplication[]) => {
+      dispatch({ type: "SET_APPLICATIONS", payload: applications });
+    },
+    []
+  );
+
+  const handleApplicationsCountChange = useCallback(
+    (count: number) => {
+      setApplicationsCount(count);
+    },
+    [setApplicationsCount]
+  );
+
+  const handleHydrated = useCallback(() => {
+    dispatch({ type: "SET_HYDRATED", payload: true });
+  }, []);
+
+  const handleGoalAchieved = useCallback(() => {
+    dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
+  }, []);
+
+  const handleCountUpdate = useCallback((count: number) => {
+    dispatch({ type: "SET_PREVIOUS_COUNT", payload: count });
+  }, []);
+
   useApplicationsInitialization({
-    initialApplications,
-    dispatch,
-    setApplicationsCount,
+    onApplicationsChange: handleApplicationsChange,
+    onApplicationsCountChange: handleApplicationsCountChange,
+    onHydrated: handleHydrated,
   });
 
   useGoalAchievementTracking({
     applicationsLength: state.applications.length,
     previousCount: state.previousCount,
-    dispatch,
+    onGoalAchieved: handleGoalAchieved,
+    onCountUpdate: handleCountUpdate,
   });
 
   useSessionGoalCheck({
     initialApplicationsLength: initialApplications.length,
-    dispatch,
+    onGoalAchieved: handleGoalAchieved,
   });
 
   const handleCardClick = (app: SavedApplication) => {
@@ -60,8 +87,12 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
       await updateApplicationContent({
         applicationId: state.selectedApplication.id,
         content: state.editedContent,
-        dispatch,
-        setApplicationsCount,
+        onApplicationsChange: (applications) => {
+          dispatch({ type: "SET_APPLICATIONS", payload: applications });
+        },
+        onApplicationsCountChange: (count) => {
+          setApplicationsCount(count);
+        },
       });
     }
     handleModalClose();
@@ -73,12 +104,21 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
     showToast("Changes saved successfully!", "save");
   };
 
-  const handleDeleteApplication = async (appId: string) => {
+  const handleDeleteApplication = async (applicationId: string) => {
     await deleteApplication({
-      applicationId: appId,
-      dispatch,
-      setApplicationsCount,
-      showToast,
+      applicationId,
+      onApplicationsChange: (applications) => {
+        dispatch({ type: "SET_APPLICATIONS", payload: applications });
+      },
+      onApplicationsCountChange: (count) => {
+        setApplicationsCount(count);
+      },
+      onSuccess: () => {
+        showToast("Application deleted successfully!", "delete");
+      },
+      onError: () => {
+        showToast("Failed to delete application. Please try again.", "error");
+      },
     });
     dispatch({ type: "HIDE_DELETE_CONFIRM" });
   };
