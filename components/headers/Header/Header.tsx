@@ -19,21 +19,16 @@ const Header = ({ initialApplicationCount }: HeaderProps) => {
     initialApplicationCount
   );
 
-  const handleHomeClick = () => {
+  const handleNavigateHome = () => {
     window.dispatchEvent(new CustomEvent("navigationStarted"));
     router.push("/applications");
-  };
-
-  const handleLogoClick = () => {
-    window.dispatchEvent(new CustomEvent("navigationStarted"));
-    router.push("/");
   };
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <button
-          onClick={handleLogoClick}
+          onClick={handleNavigateHome}
           className={styles.logoButton}
           aria-label="Go to home page"
         >
@@ -50,7 +45,7 @@ const Header = ({ initialApplicationCount }: HeaderProps) => {
           <IconButton
             icon={<HomeIcon />}
             aria-label="Home"
-            onClick={handleHomeClick}
+            onClick={handleNavigateHome}
             className={styles.homeButton}
           />
         </div>
