@@ -17,5 +17,6 @@ export function useApplicationsInitialization({
       onApplicationsCountChange,
       onHydrated,
     });
-  }, [onApplicationsChange, onApplicationsCountChange, onHydrated]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }

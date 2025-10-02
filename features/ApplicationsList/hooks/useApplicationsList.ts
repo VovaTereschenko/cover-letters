@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from "react";
+import { useReducer } from "react";
 import { useApplicationsCount } from "@/contexts/ApplicationsCountContext";
 import { useToast } from "@/contexts/ToastContext";
 import { SavedApplication } from "@/types";
@@ -30,48 +30,34 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
   const { setApplicationsCount } = useApplicationsCount();
   const { showToast } = useToast();
 
-  const handleApplicationsChange = useCallback(
-    (applications: SavedApplication[]) => {
+  useApplicationsInitialization({
+    onApplicationsChange: (applications) => {
       dispatch({ type: "SET_APPLICATIONS", payload: applications });
     },
-    []
-  );
-
-  const handleApplicationsCountChange = useCallback(
-    (count: number) => {
+    onApplicationsCountChange: (count) => {
       setApplicationsCount(count);
     },
-    [setApplicationsCount]
-  );
-
-  const handleHydrated = useCallback(() => {
-    dispatch({ type: "SET_HYDRATED", payload: true });
-  }, []);
-
-  const handleGoalAchieved = useCallback(() => {
-    dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
-  }, []);
-
-  const handleCountUpdate = useCallback((count: number) => {
-    dispatch({ type: "SET_PREVIOUS_COUNT", payload: count });
-  }, []);
-
-  useApplicationsInitialization({
-    onApplicationsChange: handleApplicationsChange,
-    onApplicationsCountChange: handleApplicationsCountChange,
-    onHydrated: handleHydrated,
+    onHydrated: () => {
+      dispatch({ type: "SET_HYDRATED", payload: true });
+    },
   });
 
   useGoalAchievementTracking({
     applicationsLength: state.applications.length,
     previousCount: state.previousCount,
-    onGoalAchieved: handleGoalAchieved,
-    onCountUpdate: handleCountUpdate,
+    onGoalAchieved: () => {
+      dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
+    },
+    onCountUpdate: (count) => {
+      dispatch({ type: "SET_PREVIOUS_COUNT", payload: count });
+    },
   });
 
   useSessionGoalCheck({
     initialApplicationsLength: initialApplications.length,
-    onGoalAchieved: handleGoalAchieved,
+    onGoalAchieved: () => {
+      dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
+    },
   });
 
   const handleCardClick = (app: SavedApplication) => {

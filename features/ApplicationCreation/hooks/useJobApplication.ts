@@ -53,11 +53,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     dispatch({ type: "SET_APPLICATIONS_COUNT", payload: count });
   }, []);
 
-  const handleNavigationCleanup = useCallback(() => {
-    dispatch({ type: "SET_IS_GENERATING", payload: false });
-  }, []);
-
-  const handleBeforeUnload = useCallback(() => {
+  const handleSetIsGenerating = useCallback(() => {
     dispatch({ type: "SET_IS_GENERATING", payload: false });
   }, []);
 
@@ -65,8 +61,8 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
 
   useNavigationCleanup(
     abortControllerRef,
-    handleNavigationCleanup,
-    handleBeforeUnload
+    handleSetIsGenerating,
+    handleSetIsGenerating
   );
 
   const isGenerateDisabled = () => {
@@ -115,6 +111,10 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
         getSavedApplicationId: () => state.savedApplicationId,
       });
     } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return;
+      }
+
       await handleGenerationError({
         error,
         onGeneratedApplicationChange: (coverLetter: string) => {

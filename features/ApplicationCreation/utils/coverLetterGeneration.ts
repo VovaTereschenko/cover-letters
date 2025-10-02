@@ -60,7 +60,9 @@ export const handleGenerationError = async ({
   ) => Promise<void>;
   getSavedApplicationId: () => string;
 }) => {
-  console.error("Generation error:", error);
+  if (!(error instanceof Error && error.name === "AbortError")) {
+    console.error("Generation error:", error);
+  }
 
   const fallbackApplication = AI_PROMPTS.fallbackTemplate("", "", "", "");
 

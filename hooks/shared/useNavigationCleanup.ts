@@ -31,5 +31,5 @@ export function useNavigationCleanup({
       window.removeEventListener("navigationStarted", handleNavigation);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [abortControllerRef, onNavigationCleanup, onBeforeUnload]);
+  }, [abortControllerRef, onBeforeUnload, onNavigationCleanup]);
 }

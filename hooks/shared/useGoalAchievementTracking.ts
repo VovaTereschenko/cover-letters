@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { RECOMMENDED_AMOUNT_OF_APPLICATIONS } from "@/constants";
 
 export function useGoalAchievementTracking({
@@ -14,24 +14,17 @@ export function useGoalAchievementTracking({
 }) {
   const lastProcessedCount = useRef<number>(previousCount);
 
-  const memoizedOnGoalAchieved = useCallback(onGoalAchieved, [onGoalAchieved]);
-  const memoizedOnCountUpdate = useCallback(onCountUpdate, [onCountUpdate]);
-
   useEffect(() => {
     if (lastProcessedCount.current !== currentCount) {
       if (
         currentCount === RECOMMENDED_AMOUNT_OF_APPLICATIONS &&
         previousCount < RECOMMENDED_AMOUNT_OF_APPLICATIONS
       ) {
-        memoizedOnGoalAchieved();
+        onGoalAchieved();
       }
-      memoizedOnCountUpdate(currentCount);
+      onCountUpdate(currentCount);
       lastProcessedCount.current = currentCount;
     }
-  }, [
-    currentCount,
-    previousCount,
-    memoizedOnGoalAchieved,
-    memoizedOnCountUpdate,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentCount, previousCount]);
 }

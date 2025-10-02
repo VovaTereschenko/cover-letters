@@ -1,10 +1,6 @@
 import { useEffect } from "react";
 import { localStorageService } from "@/lib/localStorage";
 
-/**
- * Abstract hook for synchronizing applications count with localStorage
- * Can be used by both ApplicationCreation and ApplicationsList features
- */
 export function useApplicationsCountSync({
   initialCount,
   onCountChange,
