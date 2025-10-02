@@ -5,8 +5,10 @@ import { SavedApplication } from "@/types";
 import type { ApplicationsState } from "../types";
 import { applicationsReducer } from "./applicationsReducer";
 import { useApplicationsInitialization } from "./useApplicationsInitialization";
-import { useGoalAchievementTracking } from "./useGoalAchievementTracking";
-import { useSessionGoalCheck } from "./useSessionGoalCheck";
+import {
+  useGoalAchievementTracking,
+  useSessionGoalCheck,
+} from "@/hooks/shared";
 import {
   updateApplicationContent,
   deleteApplication,
@@ -43,7 +45,7 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
   });
 
   useGoalAchievementTracking({
-    applicationsLength: state.applications.length,
+    currentCount: state.applications.length,
     previousCount: state.previousCount,
     onGoalAchieved: () => {
       dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
@@ -54,7 +56,7 @@ export function useApplicationsList(initialApplications: SavedApplication[]) {
   });
 
   useSessionGoalCheck({
-    initialApplicationsLength: initialApplications.length,
+    applicationCount: initialApplications.length,
     onGoalAchieved: () => {
       dispatch({ type: "SHOW_GOAL_ACHIEVEMENT" });
     },

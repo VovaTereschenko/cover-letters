@@ -6,8 +6,7 @@ import { jobApplicationReducer } from "./jobApplicationReducer";
 import { createFormValidation } from "../utils/formValidationHelpers";
 import { createTitleManagerHelpers } from "../utils/titleManagerHelpers";
 import { createApplicationStorageHelpers } from "../utils/applicationStorageHelpers";
-import { useApplicationsCountSync } from "./useApplicationsCountSync";
-import { useNavigationCleanup } from "./useNavigationCleanup";
+import { useApplicationsCountSync, useNavigationCleanup } from "@/hooks/shared";
 import {
   createCoverLetterRequest,
   handleGenerationSuccess,
@@ -57,13 +56,16 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     dispatch({ type: "SET_IS_GENERATING", payload: false });
   }, []);
 
-  useApplicationsCountSync(initialApplicationsCount, handleCountChange);
+  useApplicationsCountSync({
+    initialCount: initialApplicationsCount,
+    onCountChange: handleCountChange,
+  });
 
-  useNavigationCleanup(
+  useNavigationCleanup({
     abortControllerRef,
-    handleSetIsGenerating,
-    handleSetIsGenerating
-  );
+    onNavigationCleanup: handleSetIsGenerating,
+    onBeforeUnload: handleSetIsGenerating,
+  });
 
   const isGenerateDisabled = () => {
     return !isFormValid() || state.isGenerating;
