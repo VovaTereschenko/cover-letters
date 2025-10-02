@@ -3,24 +3,24 @@ import { z } from "zod";
 export const jobApplicationSchema = z.object({
   jobTitle: z
     .string()
+    .trim()
     .min(1, "Job title is required")
-    .max(100, "Job title must be less than 100 characters")
-    .trim(),
+    .max(100, "Job title must be less than 100 characters"),
   company: z
     .string()
+    .trim()
     .min(1, "Company name is required")
-    .max(100, "Company name must be less than 100 characters")
-    .trim(),
+    .max(100, "Company name must be less than 100 characters"),
   skills: z
     .string()
+    .trim()
     .min(1, "Skills are required")
-    .max(500, "Skills must be less than 500 characters")
-    .trim(),
+    .max(500, "Skills must be less than 500 characters"),
   additionalDetails: z
     .string()
+    .trim()
     .min(1, "Additional details are required")
-    .max(1200, "Additional details must be less than 1200 characters")
-    .trim(),
+    .max(1200, "Additional details must be less than 1200 characters"),
 });
 
 export type JobApplicationFormData = z.infer<typeof jobApplicationSchema>;

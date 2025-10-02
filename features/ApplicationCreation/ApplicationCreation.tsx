@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Controller } from "react-hook-form";
 import { TextField } from "@/components/shared/TextField";
 import { Button } from "@/components/shared/Button";
 import { CopyIcon, RefreshIcon } from "@/components/icons";
@@ -17,7 +18,11 @@ type ApplicationCreationProps = {
 export default function ApplicationCreation({
   initialApplicationsCount = 0,
 }: ApplicationCreationProps) {
-  const { state, actions } = useJobApplication(initialApplicationsCount);
+  const { state, form, actions } = useJobApplication(initialApplicationsCount);
+  const {
+    control,
+    formState: { errors },
+  } = form;
 
   return (
     <main className={styles.layoutWrapper}>
@@ -30,53 +35,83 @@ export default function ApplicationCreation({
           </header>
 
           <section className={styles.inputRow}>
-            <TextField
-              variant="input"
-              label={UI_MESSAGES.labels.jobTitle}
-              placeholder={UI_MESSAGES.placeholders.jobTitle}
-              value={state.jobTitle}
-              onChange={actions.handleJobTitleChange}
-              onBlur={actions.handleJobTitleBlur}
-              error={actions.hasFieldError("jobTitle")}
-              helperText={actions.getFieldError("jobTitle")}
+            <Controller
+              name="jobTitle"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  variant="input"
+                  label={UI_MESSAGES.labels.jobTitle}
+                  placeholder={UI_MESSAGES.placeholders.jobTitle}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  error={!!errors.jobTitle}
+                  helperText={errors.jobTitle?.message}
+                  name={field.name}
+                />
+              )}
             />
-            <TextField
-              variant="input"
-              label={UI_MESSAGES.labels.company}
-              placeholder={UI_MESSAGES.placeholders.company}
-              value={state.company}
-              onChange={actions.handleCompanyChange}
-              onBlur={actions.handleCompanyBlur}
-              error={actions.hasFieldError("company")}
-              helperText={actions.getFieldError("company")}
+            <Controller
+              name="company"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  variant="input"
+                  label={UI_MESSAGES.labels.company}
+                  placeholder={UI_MESSAGES.placeholders.company}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  error={!!errors.company}
+                  helperText={errors.company?.message}
+                  name={field.name}
+                />
+              )}
             />
           </section>
 
           <section className={styles.inputSingle}>
-            <TextField
-              variant="input"
-              label={UI_MESSAGES.labels.skills}
-              placeholder={UI_MESSAGES.placeholders.skills}
-              value={state.skills}
-              onChange={actions.handleSkillsChange}
-              error={actions.hasFieldError("skills")}
-              helperText={actions.getFieldError("skills")}
+            <Controller
+              name="skills"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  variant="input"
+                  label={UI_MESSAGES.labels.skills}
+                  placeholder={UI_MESSAGES.placeholders.skills}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  error={!!errors.skills}
+                  helperText={errors.skills?.message}
+                  name={field.name}
+                />
+              )}
             />
           </section>
 
           <section className={styles.textareaSection}>
-            <TextField
-              variant="textarea"
-              label={UI_MESSAGES.labels.additionalDetails}
-              placeholder={UI_MESSAGES.placeholders.additionalDetails}
-              value={state.additionalDetails}
-              onChange={actions.handleAdditionalDetailsChange}
-              maxSymbols={1200}
-              rows={8}
-              resize="none"
-              expandable
-              error={actions.hasFieldError("additionalDetails")}
-              helperText={actions.getFieldError("additionalDetails")}
+            <Controller
+              name="additionalDetails"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  variant="textarea"
+                  label={UI_MESSAGES.labels.additionalDetails}
+                  placeholder={UI_MESSAGES.placeholders.additionalDetails}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  onBlur={field.onBlur}
+                  maxSymbols={1200}
+                  rows={8}
+                  resize="none"
+                  expandable
+                  error={!!errors.additionalDetails}
+                  helperText={errors.additionalDetails?.message}
+                  name={field.name}
+                />
+              )}
             />
           </section>
 

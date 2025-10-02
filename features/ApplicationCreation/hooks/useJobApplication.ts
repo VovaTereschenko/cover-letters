@@ -1,10 +1,9 @@
-import { useReducer, useRef, useCallback } from "react";
+import { useReducer, useRef, useCallback, useEffect } from "react";
 import { useToast } from "@/contexts/ToastContext";
 import { UI_MESSAGES } from "@/constants/ai";
 import type { JobApplicationState } from "../types";
 import { jobApplicationReducer } from "./jobApplicationReducer";
-import { createFormValidation } from "../utils/formValidationHelpers";
-import { createTitleManagerHelpers } from "../utils/titleManagerHelpers";
+import { useJobApplicationForm } from "./useJobApplicationForm";
 import { createApplicationStorageHelpers } from "../utils/applicationStorageHelpers";
 import { useApplicationsCountSync, useNavigationCleanup } from "@/hooks/shared";
 import {
@@ -15,10 +14,6 @@ import {
 
 export function useJobApplication(initialApplicationsCount: number = 0) {
   const initialState: JobApplicationState = {
-    jobTitle: "",
-    company: "",
-    skills: "",
-    additionalDetails: "",
     generatedApplication: "",
     titleText: UI_MESSAGES.newApplication,
     isGenerating: false,
@@ -26,31 +21,38 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     savedApplicationId: "",
     isCountLoaded: true,
     progressHighlightColor: undefined,
-    validationErrors: {},
   };
 
   const [state, dispatch] = useReducer(jobApplicationReducer, initialState);
   const { showToast } = useToast();
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const { handleFieldValidation, isFormValid, getFieldError, hasFieldError } =
-    createFormValidation({ state, dispatch });
+  const form = useJobApplicationForm();
+  const { watch, formState, reset, trigger } = form;
+  const formValues = watch();
 
-  const { updateTitleFromFields, getTitleClassName } =
-    createTitleManagerHelpers({
-      jobTitle: state.jobTitle,
-      company: state.company,
-      titleText: state.titleText,
-      onTitleChange: (title: string) => {
-        dispatch({ type: "SET_TITLE_TEXT", payload: title });
-      },
-    });
+  useEffect(() => {
+    if (!formValues.jobTitle.trim() && !formValues.company.trim()) {
+      dispatch({ type: "SET_TITLE_TEXT", payload: UI_MESSAGES.newApplication });
+      return;
+    }
+
+    const parts = [];
+    if (formValues.jobTitle.trim()) {
+      parts.push(formValues.jobTitle.trim());
+    }
+    if (formValues.company.trim()) {
+      parts.push(formValues.company.trim());
+    }
+
+    dispatch({ type: "SET_TITLE_TEXT", payload: parts.join(", ") });
+  }, [formValues.jobTitle, formValues.company]);
 
   const { autoSaveApplication, deleteSavedApplication } =
     createApplicationStorageHelpers({
       titleText: state.titleText,
-      company: state.company,
-      jobTitle: state.jobTitle,
+      company: formValues.company,
+      jobTitle: formValues.jobTitle,
       applicationsCount: state.applicationsCount,
       savedApplicationId: state.savedApplicationId,
       onSavedApplicationIdChange: (id: string) => {
@@ -80,8 +82,15 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
     onBeforeUnload: handleSetIsGenerating,
   });
 
+  const getTitleClassName = (styles: Record<string, string>) => {
+    if (state.titleText === UI_MESSAGES.newApplication) {
+      return `title-primary ${styles.title} ${styles.titlePlaceholder}`;
+    }
+    return `title-primary ${styles.title}`;
+  };
+
   const isGenerateDisabled = () => {
-    return !isFormValid() || state.isGenerating;
+    return !formState.isValid || state.isGenerating;
   };
 
   const setupAbortController = () => {
@@ -93,15 +102,18 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   };
 
   const handleGenerate = async () => {
+    const isValid = await trigger();
+    if (!isValid) return;
+
     const abortController = setupAbortController();
     dispatch({ type: "SET_IS_GENERATING", payload: true });
 
     try {
       const formData = {
-        jobTitle: state.jobTitle,
-        company: state.company,
-        skills: state.skills,
-        additionalDetails: state.additionalDetails,
+        jobTitle: formValues.jobTitle,
+        company: formValues.company,
+        skills: formValues.skills,
+        additionalDetails: formValues.additionalDetails,
       };
 
       const response = await createCoverLetterRequest(
@@ -154,6 +166,7 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   };
 
   const handleGenerateNext = () => {
+    reset();
     dispatch({ type: "CLEAR_FORM_ONLY" });
   };
 
@@ -163,46 +176,14 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   };
 
   const handleCreateNew = () => {
+    reset();
     dispatch({ type: "RESET_FORM" });
-  };
-
-  const handleJobTitleChange = (value: string) => {
-    dispatch({ type: "SET_JOB_TITLE", payload: value });
-    handleFieldValidation("jobTitle", value);
-  };
-
-  const handleCompanyChange = (value: string) => {
-    dispatch({ type: "SET_COMPANY", payload: value });
-    handleFieldValidation("company", value);
-  };
-
-  const handleSkillsChange = (value: string) => {
-    dispatch({ type: "SET_SKILLS", payload: value });
-    handleFieldValidation("skills", value);
-  };
-
-  const handleAdditionalDetailsChange = (value: string) => {
-    dispatch({ type: "SET_ADDITIONAL_DETAILS", payload: value });
-    handleFieldValidation("additionalDetails", value);
-  };
-
-  const handleJobTitleBlur = () => {
-    updateTitleFromFields();
-  };
-
-  const handleCompanyBlur = () => {
-    updateTitleFromFields();
   };
 
   return {
     state,
+    form,
     actions: {
-      handleJobTitleChange,
-      handleCompanyChange,
-      handleSkillsChange,
-      handleAdditionalDetailsChange,
-      handleJobTitleBlur,
-      handleCompanyBlur,
       handleGenerate,
       handleTryAgain,
       handleGenerateNext,
@@ -210,8 +191,6 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
       handleCreateNew,
       getTitleClassName,
       isGenerateDisabled,
-      getFieldError,
-      hasFieldError,
     },
   };
 }
