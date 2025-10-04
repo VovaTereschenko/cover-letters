@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { SubHeader } from "@/components/headers/SubHeader";
 
-const ClientSubHeader = () => {
+export const ClientSubHeader = () => {
   const router = useRouter();
 
   const handleCreateNew = () => {
@@ -12,5 +12,3 @@ const ClientSubHeader = () => {
 
   return <SubHeader onCreateNew={handleCreateNew} />;
 };
-
-export { ClientSubHeader };

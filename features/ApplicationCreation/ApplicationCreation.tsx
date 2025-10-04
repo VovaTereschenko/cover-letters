@@ -1,11 +1,9 @@
 "use client";
 
 import React from "react";
-import { Controller } from "react-hook-form";
-import { TextField } from "@/components/shared/TextField";
 import { Button } from "@/components/shared/Button";
 import { CopyIcon, RefreshIcon } from "@/components/icons";
-import { ContentArea } from "./components";
+import { ContentArea, ControlledTextField } from "./components";
 import { HitYourGoal } from "@/features/HitYourGoal";
 import { useJobApplication } from "@/features/ApplicationCreation/hooks/useJobApplication";
 import { UI_MESSAGES } from "@/constants/ai";
@@ -35,83 +33,44 @@ export default function ApplicationCreation({
           </header>
 
           <section className={styles.inputRow}>
-            <Controller
+            <ControlledTextField
               name="jobTitle"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  variant="input"
-                  label={UI_MESSAGES.labels.jobTitle}
-                  placeholder={UI_MESSAGES.placeholders.jobTitle}
-                  value={field.value}
-                  onChange={(value) => field.onChange(value)}
-                  onBlur={field.onBlur}
-                  error={!!errors.jobTitle}
-                  helperText={errors.jobTitle?.message}
-                  name={field.name}
-                />
-              )}
+              errors={errors}
+              label={UI_MESSAGES.labels.jobTitle}
+              placeholder={UI_MESSAGES.placeholders.jobTitle}
             />
-            <Controller
+            <ControlledTextField
               name="company"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  variant="input"
-                  label={UI_MESSAGES.labels.company}
-                  placeholder={UI_MESSAGES.placeholders.company}
-                  value={field.value}
-                  onChange={(value) => field.onChange(value)}
-                  onBlur={field.onBlur}
-                  error={!!errors.company}
-                  helperText={errors.company?.message}
-                  name={field.name}
-                />
-              )}
+              errors={errors}
+              label={UI_MESSAGES.labels.company}
+              placeholder={UI_MESSAGES.placeholders.company}
             />
           </section>
 
           <section className={styles.inputSingle}>
-            <Controller
+            <ControlledTextField
               name="skills"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  variant="input"
-                  label={UI_MESSAGES.labels.skills}
-                  placeholder={UI_MESSAGES.placeholders.skills}
-                  value={field.value}
-                  onChange={(value) => field.onChange(value)}
-                  onBlur={field.onBlur}
-                  error={!!errors.skills}
-                  helperText={errors.skills?.message}
-                  name={field.name}
-                />
-              )}
+              errors={errors}
+              label={UI_MESSAGES.labels.skills}
+              placeholder={UI_MESSAGES.placeholders.skills}
             />
           </section>
 
           <section className={styles.textareaSection}>
-            <Controller
+            <ControlledTextField
               name="additionalDetails"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  variant="textarea"
-                  label={UI_MESSAGES.labels.additionalDetails}
-                  placeholder={UI_MESSAGES.placeholders.additionalDetails}
-                  value={field.value}
-                  onChange={(value) => field.onChange(value)}
-                  onBlur={field.onBlur}
-                  maxSymbols={1200}
-                  rows={8}
-                  resize="none"
-                  expandable
-                  error={!!errors.additionalDetails}
-                  helperText={errors.additionalDetails?.message}
-                  name={field.name}
-                />
-              )}
+              errors={errors}
+              label={UI_MESSAGES.labels.additionalDetails}
+              placeholder={UI_MESSAGES.placeholders.additionalDetails}
+              variant="textarea"
+              maxSymbols={1200}
+              rows={8}
+              resize="none"
+              expandable
             />
           </section>
 

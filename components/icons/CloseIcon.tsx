@@ -1,6 +1,6 @@
 import React from "react";
 
-const CloseIcon = () => (
+export const CloseIcon = () => (
   <svg
     width="20"
     height="20"
@@ -17,5 +17,3 @@ const CloseIcon = () => (
     />
   </svg>
 );
-
-export { CloseIcon };

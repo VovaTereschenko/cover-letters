@@ -7,7 +7,7 @@ type SubHeaderProps = {
   onCreateNew?: () => void;
 };
 
-const SubHeader: React.FC<SubHeaderProps> = ({ onCreateNew }) => {
+export const SubHeader: React.FC<SubHeaderProps> = ({ onCreateNew }) => {
   return (
     <section className={styles.subHeader}>
       <header>
@@ -26,5 +26,3 @@ const SubHeader: React.FC<SubHeaderProps> = ({ onCreateNew }) => {
     </section>
   );
 };
-
-export { SubHeader };

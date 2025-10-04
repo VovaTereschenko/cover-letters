@@ -1,6 +1,6 @@
 import React from "react";
 
-const DeleteIcon = () => (
+export const DeleteIcon = () => (
   <svg
     width="20"
     height="20"
@@ -17,5 +17,3 @@ const DeleteIcon = () => (
     />
   </svg>
 );
-
-export { DeleteIcon };

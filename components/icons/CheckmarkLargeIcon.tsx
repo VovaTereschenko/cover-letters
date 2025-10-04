@@ -1,6 +1,6 @@
 import React from "react";
 
-const CheckmarkLargeIcon = () => (
+export const CheckmarkLargeIcon = () => (
   <svg
     width="28"
     height="28"
@@ -19,5 +19,3 @@ const CheckmarkLargeIcon = () => (
     />
   </svg>
 );
-
-export { CheckmarkLargeIcon };

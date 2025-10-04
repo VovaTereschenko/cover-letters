@@ -8,7 +8,7 @@ type CheckmarkIconProps = {
   checkmarkColor?: string;
 };
 
-const CheckmarkIcon = ({
+export const CheckmarkIcon = ({
   width = 28,
   height = 28,
   className,
@@ -34,5 +34,3 @@ const CheckmarkIcon = ({
     />
   </svg>
 );
-
-export { CheckmarkIcon };

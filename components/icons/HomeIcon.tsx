@@ -7,7 +7,7 @@ type HomeIconProps = {
   color?: string;
 };
 
-const HomeIcon = ({
+export const HomeIcon = ({
   width = 24,
   height = 24,
   className,
@@ -32,5 +32,3 @@ const HomeIcon = ({
     />
   </svg>
 );
-
-export { HomeIcon };

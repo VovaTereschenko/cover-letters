@@ -19,7 +19,7 @@ type ModalProps = {
   className?: string;
 };
 
-const Modal = ({
+export const Modal = ({
   isOpen,
   onClose,
   title,
@@ -115,5 +115,3 @@ const Modal = ({
     </div>
   );
 };
-
-export { Modal };

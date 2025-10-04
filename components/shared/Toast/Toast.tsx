@@ -9,7 +9,7 @@ type ToastProps = {
   onClose: () => void;
 };
 
-const Toast: React.FC<ToastProps> = ({ message, isVisible, show }) => {
+export const Toast: React.FC<ToastProps> = ({ message, isVisible, show }) => {
   if (!isVisible) return null;
 
   return (
@@ -23,5 +23,3 @@ const Toast: React.FC<ToastProps> = ({ message, isVisible, show }) => {
     </div>
   );
 };
-
-export { Toast };

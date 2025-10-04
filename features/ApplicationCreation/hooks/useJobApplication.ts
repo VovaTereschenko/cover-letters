@@ -166,7 +166,6 @@ export function useJobApplication(initialApplicationsCount: number = 0) {
   };
 
   const handleGenerateNext = () => {
-    reset();
     dispatch({ type: "CLEAR_FORM_ONLY" });
   };
 

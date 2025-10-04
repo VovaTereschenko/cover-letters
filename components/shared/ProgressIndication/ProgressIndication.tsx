@@ -17,7 +17,7 @@ type ProgressIndicationProps = {
   highlightColor?: HighlightColor;
 };
 
-const ProgressIndication = ({
+export const ProgressIndication = ({
   currentStep,
   totalSteps = RECOMMENDED_AMOUNT_OF_APPLICATIONS,
   singularText = DEFAULT_SINGULAR_TEXT,
@@ -106,4 +106,3 @@ const ProgressIndication = ({
   );
 };
 
-export { ProgressIndication };

@@ -13,7 +13,7 @@ type HeaderProps = {
   initialApplicationCount: number;
 };
 
-const Header = ({ initialApplicationCount }: HeaderProps) => {
+export const Header = ({ initialApplicationCount }: HeaderProps) => {
   const router = useRouter();
   const { applicationCount, highlightColor } = useApplicationProgress(
     initialApplicationCount
@@ -53,5 +53,3 @@ const Header = ({ initialApplicationCount }: HeaderProps) => {
     </header>
   );
 };
-
-export { Header };
