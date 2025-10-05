@@ -62,25 +62,109 @@ describe("ApplicationCreation", () => {
     expect(jobTitleInput).toBeInTheDocument();
   });
 
-  describe("Accessibility", () => {
-    it("has proper labels for form fields", async () => {
-      render(<ApplicationCreation />);
+  it("triggers API request when form is submitted with valid data", async () => {
+    const user = userEvent.setup();
 
-      expect(await screen.findByLabelText(/job title/i)).toBeInTheDocument();
-      expect(await screen.findByLabelText(/company/i)).toBeInTheDocument();
-      expect(await screen.findByLabelText(/i am good at/i)).toBeInTheDocument();
-      expect(
-        await screen.findByLabelText(/additional details/i)
-      ).toBeInTheDocument();
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        coverLetter: "Generated cover letter content",
+      }),
     });
 
-    it("has proper button accessibility", async () => {
-      render(<ApplicationCreation />);
+    render(<ApplicationCreation />);
 
-      const generateButton = await screen.findByRole("button", {
-        name: /generate now/i,
-      });
-      expect(generateButton).toBeInTheDocument();
+    const jobTitleInput = await screen.findByLabelText(/job title/i);
+    const companyInput = await screen.findByLabelText(/company/i);
+    const skillsInput = await screen.findByLabelText(/i am good at/i);
+    const additionalDetailsInput = await screen.findByLabelText(
+      /additional details/i
+    );
+
+    await user.type(jobTitleInput, "Software Engineer");
+    await user.type(companyInput, "Tech Corp");
+    await user.type(skillsInput, "JavaScript, React, Node.js");
+    await user.type(
+      additionalDetailsInput,
+      "Experienced developer with 5 years in web development"
+    );
+
+    const generateButton = await screen.findByRole("button", {
+      name: /generate now/i,
     });
+    await user.click(generateButton);
+
+    expect(global.fetch).toHaveBeenCalledWith("/api/generate-cover-letter", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jobTitle: "Software Engineer",
+        company: "Tech Corp",
+        skills: "JavaScript, React, Node.js",
+        additionalDetails:
+          "Experienced developer with 5 years in web development",
+      }),
+      signal: expect.any(AbortSignal),
+    });
+  });
+
+  it("handles API request failure gracefully", async () => {
+    const user = userEvent.setup();
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({
+        error: "Server error occurred",
+      }),
+    });
+
+    render(<ApplicationCreation />);
+
+    const jobTitleInput = await screen.findByLabelText(/job title/i);
+    const companyInput = await screen.findByLabelText(/company/i);
+    const skillsInput = await screen.findByLabelText(/i am good at/i);
+    const additionalDetailsInput = await screen.findByLabelText(
+      /additional details/i
+    );
+
+    await user.type(jobTitleInput, "Software Engineer");
+    await user.type(companyInput, "Tech Corp");
+    await user.type(skillsInput, "JavaScript, React");
+    await user.type(additionalDetailsInput, "Passionate about coding");
+
+    const generateButton = await screen.findByRole("button", {
+      name: /generate now/i,
+    });
+    await user.click(generateButton);
+
+    expect(global.fetch).toHaveBeenCalledWith("/api/generate-cover-letter", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jobTitle: "Software Engineer",
+        company: "Tech Corp",
+        skills: "JavaScript, React",
+        additionalDetails: "Passionate about coding",
+      }),
+      signal: expect.any(AbortSignal),
+    });
+
+    expect(generateButton).not.toBeDisabled();
+  });
+
+  it("does not trigger API request when form validation fails", async () => {
+    const user = userEvent.setup();
+    render(<ApplicationCreation />);
+
+    const generateButton = await screen.findByRole("button", {
+      name: /generate now/i,
+    });
+    await user.click(generateButton);
+
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });
