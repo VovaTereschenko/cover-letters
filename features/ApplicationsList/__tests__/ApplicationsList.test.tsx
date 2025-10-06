@@ -3,41 +3,20 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ApplicationsList } from "../ApplicationsList";
 import { render } from "../../../test-utils/renderWithProviders";
-import { SavedApplication } from "@/types";
+import {
+  MOCK_APPLICATIONS,
+  createMockRouter,
+} from "../../../test-utils/mockData";
+
+const mockRouter = createMockRouter();
 
 jest.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn(),
-  }),
+  useRouter: () => mockRouter,
   usePathname: () => "/test-path",
   useSearchParams: () => new URLSearchParams(),
 }));
 
-const mockApplications: SavedApplication[] = [
-  {
-    id: "1",
-    title: "Software Engineer at Google",
-    company: "Google",
-    jobTitle: "Software Engineer",
-    content:
-      "Dear hiring manager, I am excited to apply for the Software Engineer position at Google...",
-    createdAt: "2024-01-01T00:00:00.000Z",
-  },
-  {
-    id: "2",
-    title: "Frontend Developer at Meta",
-    company: "Meta",
-    jobTitle: "Frontend Developer",
-    content:
-      "I am writing to express my interest in the Frontend Developer role at Meta...",
-    createdAt: "2024-01-02T00:00:00.000Z",
-  },
-];
+const mockApplications = MOCK_APPLICATIONS.pair;
 
 describe("ApplicationsList", () => {
   beforeEach(() => {

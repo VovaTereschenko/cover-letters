@@ -7,7 +7,6 @@ import { render } from "../../../test-utils/renderWithProviders";
 describe("ApplicationCreation", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (global.fetch as jest.Mock).mockReset();
   });
 
   it("renders the form with all fields", async () => {
