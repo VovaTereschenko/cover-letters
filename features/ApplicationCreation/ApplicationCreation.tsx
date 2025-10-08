@@ -5,31 +5,67 @@ import { Button } from "@/components/shared/Button";
 import { CopyIcon, RefreshIcon } from "@/components/icons";
 import { ContentArea, ControlledTextField } from "./components";
 import { HitYourGoal } from "@/features/HitYourGoal";
-import { useJobApplication } from "@/features/ApplicationCreation/hooks/useJobApplication";
+import { useJobApplicationForm } from "./hooks/useJobApplicationForm";
+import {
+  useTitleTextSync,
+  useApplicationGeneration,
+  useApplicationActions,
+  useClipboard,
+} from "./hooks";
+import {
+  useGeneratedApplication,
+  useTitleText,
+  useIsGenerating,
+} from "@/store/jobApplication";
+import { useApplicationsCount } from "@/store/applications";
 import { UI_MESSAGES } from "@/constants/ai";
 import styles from "./ApplicationCreation.module.css";
 
-type ApplicationCreationProps = {
-  initialApplicationsCount?: number;
-};
+export default function ApplicationCreation() {
+  const generatedApplication = useGeneratedApplication();
+  const titleText = useTitleText();
+  const isGenerating = useIsGenerating();
+  const applicationsCount = useApplicationsCount();
 
-export default function ApplicationCreation({
-  initialApplicationsCount = 0,
-}: ApplicationCreationProps) {
-  const { state, form, actions } = useJobApplication(initialApplicationsCount);
+  const form = useJobApplicationForm();
   const {
     control,
     formState: { errors },
+    watch,
+    reset,
+    trigger,
   } = form;
+  const formValues = watch();
+
+  useTitleTextSync(formValues);
+  const { handleGenerate } = useApplicationGeneration(trigger);
+  const { handleTryAgain, handleGenerateNext, handleCreateNew } =
+    useApplicationActions();
+  const { handleCopyToClipboard } = useClipboard();
+
+  const onGenerate = () => handleGenerate(formValues);
+  const onCopyToClipboard = () => handleCopyToClipboard(generatedApplication);
+  const onCreateNew = () => handleCreateNew(reset);
+
+  const getTitleClassName = (styles: Record<string, string>) => {
+    const baseClass = styles.title;
+    if (isGenerating) return `${baseClass} ${styles.generating}`;
+    if (generatedApplication) return `${baseClass} ${styles.completed}`;
+    return baseClass;
+  };
+
+  const isGenerateDisabled = () => {
+    const isFormValid =
+      formValues.jobTitle?.trim() && formValues.company?.trim();
+    return isGenerating || !isFormValid;
+  };
 
   return (
     <main className={styles.layoutWrapper}>
       <div className={styles.container}>
         <section className={styles.leftPanel}>
           <header>
-            <h1 className={actions.getTitleClassName(styles)}>
-              {state.titleText}
-            </h1>
+            <h1 className={getTitleClassName(styles)}>{titleText}</h1>
           </header>
 
           <section className={styles.inputRow}>
@@ -75,12 +111,12 @@ export default function ApplicationCreation({
           </section>
 
           <footer className={styles.buttonSection}>
-            {state.generatedApplication ? (
+            {generatedApplication ? (
               <div className={styles.buttonGroup}>
                 <Button
                   variant="outlined"
                   size="medium"
-                  onClick={actions.handleTryAgain}
+                  onClick={handleTryAgain}
                   className={styles.generateButton}
                   icon={<RefreshIcon />}
                 >
@@ -89,11 +125,11 @@ export default function ApplicationCreation({
                 <Button
                   variant="primary"
                   size="medium"
-                  onClick={actions.handleGenerateNext}
+                  onClick={handleGenerateNext}
                   className={styles.generateButton}
-                  loading={state.isGenerating}
+                  loading={isGenerating}
                 >
-                  {state.isGenerating
+                  {isGenerating
                     ? UI_MESSAGES.generateButton.generating
                     : UI_MESSAGES.generateButton.generateNext}
                 </Button>
@@ -102,12 +138,12 @@ export default function ApplicationCreation({
               <Button
                 variant="primary"
                 size="medium"
-                onClick={actions.handleGenerate}
-                disabled={actions.isGenerateDisabled() || state.isGenerating}
+                onClick={onGenerate}
+                disabled={isGenerateDisabled() || isGenerating}
                 className={styles.generateButton}
-                loading={state.isGenerating}
+                loading={isGenerating}
               >
-                {state.isGenerating
+                {isGenerating
                   ? UI_MESSAGES.generateButton.generating
                   : UI_MESSAGES.generateButton.generateNow}
               </Button>
@@ -118,15 +154,15 @@ export default function ApplicationCreation({
         <section className={styles.rightPanel}>
           <article className={styles.contentArea}>
             <ContentArea
-              generatedApplication={state.generatedApplication}
-              isGenerating={state.isGenerating}
+              generatedApplication={generatedApplication}
+              isGenerating={isGenerating}
             />
           </article>
-          {state.generatedApplication && (
+          {generatedApplication && (
             <footer className={styles.copyButtonContainer}>
               <Button
                 variant="text"
-                onClick={actions.handleCopyToClipboard}
+                onClick={onCopyToClipboard}
                 className={styles.copyButton}
                 icon={<CopyIcon />}
                 iconPosition="right"
@@ -138,11 +174,11 @@ export default function ApplicationCreation({
         </section>
       </div>
 
-      {state.generatedApplication && (
+      {generatedApplication && (
         <aside>
           <HitYourGoal
-            onCreateNew={actions.handleCreateNew}
-            applicationsCount={state.applicationsCount}
+            onCreateNew={onCreateNew}
+            applicationsCount={applicationsCount}
           />
         </aside>
       )}

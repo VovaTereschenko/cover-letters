@@ -63,10 +63,8 @@ describe("ApplicationsList", () => {
     expect(createButtons).toHaveLength(2);
   });
 
-  it("accepts initialApplicationsCount prop for context", async () => {
-    render(<ApplicationsList initialApplications={mockApplications} />, {
-      initialApplicationsCount: 3,
-    });
+  it("accepts initialApplications prop for proper initialization", async () => {
+    render(<ApplicationsList initialApplications={mockApplications} />);
 
     expect(await screen.findByText("Applications")).toBeInTheDocument();
   });
@@ -107,7 +105,7 @@ describe("ApplicationsList", () => {
       const createButtons = await screen.findAllByRole("button", {
         name: "Create New",
       });
-      expect(createButtons).toHaveLength(2); // header +  "hit your goal section"
+      expect(createButtons).toHaveLength(2);
       createButtons.forEach((button) => {
         expect(button).toBeInTheDocument();
       });

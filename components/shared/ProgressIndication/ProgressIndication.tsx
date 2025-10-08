@@ -1,8 +1,9 @@
+"use client";
+
 import { useEffect, useState, useRef } from "react";
 import styles from "./ProgressIndication.module.css";
 import {
   RECOMMENDED_AMOUNT_OF_APPLICATIONS,
-  DEFAULT_SINGULAR_TEXT,
   DEFAULT_PLURAL_TEXT,
 } from "@/constants";
 import classNames from "classnames";
@@ -20,12 +21,16 @@ type ProgressIndicationProps = {
 export const ProgressIndication = ({
   currentStep,
   totalSteps = RECOMMENDED_AMOUNT_OF_APPLICATIONS,
-  singularText = DEFAULT_SINGULAR_TEXT,
   pluralText = DEFAULT_PLURAL_TEXT,
   highlightColor = null,
 }: ProgressIndicationProps) => {
   const [isHighlighted, setIsHighlighted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const previousStepRef = useRef(currentStep);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const previousStep = previousStepRef.current;
@@ -50,16 +55,10 @@ export const ProgressIndication = ({
     }
   }, [highlightColor]);
 
-  const progress = Math.min(currentStep, totalSteps);
-  const isCompleted = currentStep >= totalSteps;
-  const isExceeded = currentStep > totalSteps;
+  const progress = Math.min(isMounted ? currentStep : 0, totalSteps);
+  const isCompleted = isMounted ? currentStep >= totalSteps : false;
 
-  const countText = isExceeded
-    ? `${currentStep}`
-    : `${currentStep}/${totalSteps}`;
-
-  const itemText = currentStep === 1 ? singularText : pluralText;
-  const itemType = itemText.split(" generated")[0];
+  const itemType = (pluralText || DEFAULT_PLURAL_TEXT).split(" generated")[0];
 
   return (
     <div
@@ -70,7 +69,7 @@ export const ProgressIndication = ({
       })}
     >
       <span className={styles.text}>
-        {countText} {itemType}
+        {progress}/{totalSteps} {itemType}
         <span className={styles.generatedText}> generated</span>
       </span>
       {isCompleted ? (
@@ -105,4 +104,3 @@ export const ProgressIndication = ({
     </div>
   );
 };
-

@@ -1,15 +1,14 @@
-import { getApplicationCountFromCookies } from "@/lib/cookies";
+"use client";
+
 import { ToastProvider } from "@/contexts/ToastContext";
 import { Header } from "@/components/headers/Header/Header";
 import "./globals.css";
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const initialApplicationCount = await getApplicationCountFromCookies();
-
   return (
     <html lang="en">
       <head>
@@ -17,7 +16,7 @@ export default async function RootLayout({
       </head>
       <body>
         <ToastProvider>
-          <Header initialApplicationCount={initialApplicationCount} />
+          <Header />
           {children}
         </ToastProvider>
       </body>

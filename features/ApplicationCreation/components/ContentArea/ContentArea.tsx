@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { useRef, useEffect } from "react";
 import { LoadingAnimation } from "../LoadingAnimation";
 import { UI_MESSAGES } from "@/constants/ai";
 import styles from "./ContentArea.module.css";
@@ -12,7 +13,15 @@ export function ContentArea({
   generatedApplication,
   isGenerating,
 }: ContentAreaProps) {
-  if (generatedApplication) {
+  const lastNonEmptyRef = useRef("");
+  useEffect(() => {
+    if (generatedApplication) {
+      lastNonEmptyRef.current = generatedApplication;
+    }
+  }, [generatedApplication]);
+
+  if (generatedApplication || (isGenerating && lastNonEmptyRef.current)) {
+    const textToShow = generatedApplication || lastNonEmptyRef.current;
     return (
       <pre
         className={classNames(
@@ -21,7 +30,7 @@ export function ContentArea({
           "text-secondary"
         )}
       >
-        {generatedApplication}
+        {textToShow}
       </pre>
     );
   }

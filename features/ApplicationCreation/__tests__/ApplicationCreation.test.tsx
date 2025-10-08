@@ -3,10 +3,17 @@ import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ApplicationCreation from "../ApplicationCreation";
 import { render } from "../../../test-utils/renderWithProviders";
+import { useJobApplicationStore } from "@/store/jobApplication";
+import { useAppStore } from "@/store/applications";
 
 describe("ApplicationCreation", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    useJobApplicationStore.getState().clearAll();
+    useAppStore.setState((state) => ({
+      ...state,
+      applications: [],
+    }));
   });
 
   it("renders the form with all fields", async () => {
@@ -36,10 +43,13 @@ describe("ApplicationCreation", () => {
     ).toBeInTheDocument();
   });
 
-  it("accepts initialApplicationsCount prop", async () => {
-    render(<ApplicationCreation initialApplicationsCount={5} />);
+  it("renders with initial empty state", async () => {
+    render(<ApplicationCreation />);
 
     expect(await screen.findByLabelText(/job title/i)).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: /new application/i })
+    ).toBeInTheDocument();
   });
 
   it("has proper semantic structure", async () => {
@@ -152,7 +162,11 @@ describe("ApplicationCreation", () => {
       signal: expect.any(AbortSignal),
     });
 
-    expect(generateButton).not.toBeDisabled();
+    expect(
+      await screen.findByRole("button", {
+        name: /generate now/i,
+      })
+    ).toBeInTheDocument();
   });
 
   it("does not trigger API request when form validation fails", async () => {

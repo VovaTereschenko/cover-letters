@@ -1,22 +1,15 @@
 import { useEffect } from "react";
+import { applicationsActions, usePreviousCount } from "@/store/applications";
 import { SavedApplication } from "@/types";
-import { initializeApplications } from "../utils/applicationOperations";
 
-export function useApplicationsInitialization({
-  onApplicationsChange,
-  onApplicationsCountChange,
-  onHydrated,
-}: {
-  onApplicationsChange: (applications: SavedApplication[]) => void;
-  onApplicationsCountChange: (count: number) => void;
-  onHydrated: () => void;
-}) {
+export const useApplicationsInitialization = (
+  initialApplications: SavedApplication[]
+) => {
+  const previousCount = usePreviousCount();
+
   useEffect(() => {
-    initializeApplications({
-      onApplicationsChange,
-      onApplicationsCountChange,
-      onHydrated,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-}
+    if (previousCount === 0 && initialApplications.length > 0) {
+      applicationsActions.setPreviousCount(initialApplications.length);
+    }
+  }, [initialApplications.length, previousCount]);
+};

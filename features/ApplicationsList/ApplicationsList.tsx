@@ -8,22 +8,58 @@ import {
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ClientSubHeader } from "@/components/headers/SubHeader";
 import { ClientHitYourGoal } from "@/features/HitYourGoal/ClientHitYourGoal";
-import { useApplicationsList } from "@/features/ApplicationsList/hooks/useApplicationsList";
 import { SavedApplication } from "@/types";
+import { useToast } from "@/contexts/ToastContext";
+import {
+  useApplications,
+  useIsModalOpen,
+  useSelectedApplication,
+  useEditedContent,
+  useShowDeleteConfirm,
+  useGoalAchievementState,
+} from "@/store/applications";
+import {
+  useApplicationsInitialization,
+  useGoalTracking,
+  useModalActions,
+  useDeleteActions,
+  useContentActions,
+  useGoalAchievementActions,
+} from "./hooks";
 import styles from "./ApplicationsList.module.css";
 
 type ApplicationsListProps = {
-  initialApplications: SavedApplication[];
+  initialApplications?: SavedApplication[];
 };
 
 export function ApplicationsList({
-  initialApplications,
+  initialApplications = [],
 }: ApplicationsListProps) {
-  const { state, actions } = useApplicationsList(initialApplications);
+  const { showToast } = useToast();
 
-  const shouldShowApplicationsList =
-    initialApplications.length > 0 &&
-    (state.applications.length > 0 || !state.isHydrated);
+  const applications = useApplications();
+  const isModalOpen = useIsModalOpen();
+  const selectedApplication = useSelectedApplication();
+  const editedContent = useEditedContent();
+  const showDeleteConfirm = useShowDeleteConfirm();
+  const showGoalAchievement = useGoalAchievementState();
+
+  useApplicationsInitialization(initialApplications);
+  useGoalTracking();
+
+  const {
+    handleCardClick,
+    handleModalClose,
+    handleSaveChanges,
+    handleEditedContentChange,
+  } = useModalActions();
+  const { handleDeleteClick, handleDeleteCancel, handleDeleteConfirm } =
+    useDeleteActions(showToast);
+  const { handleSaveAndCloseWithToast, handleCopyToClipboard } =
+    useContentActions(showToast);
+  const { handleCloseGoalAchievement } = useGoalAchievementActions();
+
+  const shouldShowApplicationsList = applications.length > 0;
 
   return (
     <div className={styles.container}>
@@ -32,16 +68,15 @@ export function ApplicationsList({
       {shouldShowApplicationsList && (
         <section className={styles.applicationsSection}>
           <div className={styles.applicationsList}>
-            {state.applications.map((app) => {
-              const isPlaceholder = app.id.startsWith("placeholder-");
+            {applications.map((app: SavedApplication) => {
               return (
                 <ApplicationCard
                   key={app.id}
                   content={app.content}
-                  onCardClick={() => actions.handleCardClick(app)}
-                  onDelete={() => actions.handleDeleteClick(app.id)}
-                  onCopy={() => actions.handleCopyToClipboard(app.content)}
-                  isPlaceholder={isPlaceholder}
+                  onCardClick={() => handleCardClick(app)}
+                  onDelete={() => handleDeleteClick(app.id)}
+                  onCopy={() => handleCopyToClipboard(app.content)}
+                  isPlaceholder={false}
                 />
               );
             })}
@@ -52,29 +87,29 @@ export function ApplicationsList({
       <ClientHitYourGoal />
 
       <ApplicationEditModal
-        isOpen={state.isModalOpen}
-        onClose={actions.handleModalClose}
-        title={state.selectedApplication?.title || "Edit Application"}
-        content={state.editedContent}
-        onContentChange={actions.handleEditedContentChange}
-        onSave={actions.handleSaveChanges}
-        onSaveAndClose={actions.handleSaveAndCloseWithToast}
-        onCopy={() => actions.handleCopyToClipboard(state.editedContent)}
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        title={selectedApplication?.title || "Edit Application"}
+        content={editedContent}
+        onContentChange={handleEditedContentChange}
+        onSave={handleSaveChanges}
+        onSaveAndClose={handleSaveAndCloseWithToast}
+        onCopy={() => handleCopyToClipboard(editedContent)}
       />
 
       <GoalAchievement
-        isVisible={state.showGoalAchievement}
-        onClose={actions.handleCloseGoalAchievement}
+        isVisible={showGoalAchievement}
+        onClose={handleCloseGoalAchievement}
       />
 
       <ConfirmDialog
-        isOpen={state.showDeleteConfirm}
+        isOpen={showDeleteConfirm}
         title="Delete Application"
         message="Are you sure you want to delete this application? This action cannot be undone."
         confirmText="Yes, delete"
         cancelText="No, keep"
-        onConfirm={actions.handleDeleteConfirm}
-        onCancel={actions.handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
       />
     </div>
   );

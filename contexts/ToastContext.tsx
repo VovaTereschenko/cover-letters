@@ -1,76 +1,18 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useReducer,
-  useRef,
-} from "react";
+import { createContext, useContext, ReactNode, useRef } from "react";
 import { Toast } from "@/components/shared/Toast";
 import { ToastType } from "@/types";
-
-function assertNever(value: never): never {
-  throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
-}
-
-type ToastState = {
-  isVisible: boolean;
-  message: string;
-  type: ToastType;
-  show: boolean;
-  shouldRender: boolean;
-};
-
-type ToastAction =
-  | { type: "SHOW_TOAST"; payload: { message: string; toastType: ToastType } }
-  | { type: "HIDE_TOAST" }
-  | { type: "START_SHOW_ANIMATION" }
-  | { type: "START_HIDE_ANIMATION" }
-  | { type: "CLEANUP_TOAST" };
-
-const initialState: ToastState = {
-  isVisible: false,
-  message: "",
-  type: "copy",
-  show: false,
-  shouldRender: false,
-};
-
-function toastReducer(state: ToastState, action: ToastAction): ToastState {
-  switch (action.type) {
-    case "SHOW_TOAST":
-      return {
-        isVisible: true,
-        message: action.payload.message,
-        type: action.payload.toastType,
-        show: false,
-        shouldRender: true,
-      };
-    case "START_SHOW_ANIMATION":
-      return {
-        ...state,
-        show: true,
-      };
-    case "START_HIDE_ANIMATION":
-      return {
-        ...state,
-        show: false,
-      };
-    case "HIDE_TOAST":
-      return {
-        ...state,
-        isVisible: false,
-      };
-    case "CLEANUP_TOAST":
-      return {
-        ...state,
-        shouldRender: false,
-      };
-    default:
-      return assertNever(action);
-  }
-}
+import {
+  useToastMessage,
+  useToastVisible,
+  useToastShow,
+  useToastShowToast,
+  useToastHideToast,
+  useToastStartShowAnimation,
+  useToastStartHideAnimation,
+  useToastCleanupToast,
+} from "@/store/toast";
 
 type ToastContextType = {
   showToast: (message: string, type?: ToastType) => void;
@@ -92,7 +34,14 @@ type ToastProviderProps = {
 };
 
 export const ToastProvider = ({ children }: ToastProviderProps) => {
-  const [state, dispatch] = useReducer(toastReducer, initialState);
+  const message = useToastMessage();
+  const shouldRender = useToastVisible();
+  const show = useToastShow();
+  const showToastAction = useToastShowToast();
+  const hideToastAction = useToastHideToast();
+  const startShowAnimation = useToastStartShowAnimation();
+  const startHideAnimation = useToastStartHideAnimation();
+  const cleanupToast = useToastCleanupToast();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const showToast = (message: string, type: ToastType = "copy") => {
@@ -100,18 +49,18 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
       clearTimeout(timeoutRef.current);
     }
 
-    dispatch({ type: "SHOW_TOAST", payload: { message, toastType: type } });
+    showToastAction(message, type);
 
     requestAnimationFrame(() => {
-      dispatch({ type: "START_SHOW_ANIMATION" });
+      startShowAnimation();
     });
 
     timeoutRef.current = setTimeout(async () => {
-      dispatch({ type: "START_HIDE_ANIMATION" });
+      startHideAnimation();
       await new Promise((resolve) => setTimeout(resolve, 0));
-      dispatch({ type: "HIDE_TOAST" });
+      hideToastAction();
       await new Promise((resolve) => setTimeout(resolve, 300));
-      dispatch({ type: "CLEANUP_TOAST" });
+      cleanupToast();
     }, 2000);
   };
 
@@ -119,20 +68,20 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    dispatch({ type: "START_HIDE_ANIMATION" });
+    startHideAnimation();
     await new Promise((resolve) => setTimeout(resolve, 0));
-    dispatch({ type: "HIDE_TOAST" });
+    hideToastAction();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    dispatch({ type: "CLEANUP_TOAST" });
+    cleanupToast();
   };
 
   return (
     <ToastContext.Provider value={{ showToast, hideToast }}>
       {children}
       <Toast
-        message={state.message}
-        isVisible={state.shouldRender}
-        show={state.show}
+        message={message}
+        isVisible={shouldRender}
+        show={show}
         onClose={hideToast}
       />
     </ToastContext.Provider>

@@ -1,60 +1,34 @@
-import { setClientApplicationCount } from "./clientCookies";
-import { SavedApplication } from "@/types";
-import { STORAGE_KEYS } from "@/constants/common";
-
 export const localStorageService = {
-  getApplications: (): SavedApplication[] => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-
+  getItem: (key: string): string | null => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEYS.APPLICATIONS);
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  },
-
-  saveApplications: (applications: SavedApplication[]): void => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    try {
-      localStorage.setItem(
-        STORAGE_KEYS.APPLICATIONS,
-        JSON.stringify(applications)
-      );
-      setClientApplicationCount(applications.length);
+      return localStorage.getItem(key);
     } catch (error) {
-      console.error("Failed to save to localStorage:", error);
+      console.error("Error reading from localStorage:", error);
+      return null;
     }
   },
 
-  addApplication: (application: SavedApplication): SavedApplication[] => {
-    const applications = localStorageService.getApplications();
-    applications.push(application);
-    localStorageService.saveApplications(applications);
-    return applications;
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (error) {
+      console.error("Error writing to localStorage:", error);
+    }
   },
 
-  updateApplication: (
-    id: string,
-    updatedApplication: Partial<SavedApplication>
-  ): SavedApplication[] => {
-    const applications = localStorageService.getApplications();
-    const updatedApplications = applications.map((app) =>
-      app.id === id ? { ...app, ...updatedApplication } : app
-    );
-    localStorageService.saveApplications(updatedApplications);
-    return updatedApplications;
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.error("Error removing from localStorage:", error);
+    }
   },
 
-  deleteApplication: (id: string): SavedApplication[] => {
-    const applications = localStorageService.getApplications();
-    const filteredApplications = applications.filter((app) => app.id !== id);
-    localStorageService.saveApplications(filteredApplications);
-    return filteredApplications;
+  clear: (): void => {
+    try {
+      localStorage.clear();
+    } catch (error) {
+      console.error("Error clearing localStorage:", error);
+    }
   },
 };

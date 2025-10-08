@@ -9,18 +9,11 @@ import { HomeIcon } from "../../icons";
 import { useApplicationProgress } from "./hooks/useApplicationProgress";
 import styles from "./Header.module.css";
 
-type HeaderProps = {
-  initialApplicationCount: number;
-};
-
-export const Header = ({ initialApplicationCount }: HeaderProps) => {
+export const Header = () => {
   const router = useRouter();
-  const { applicationCount, highlightColor } = useApplicationProgress(
-    initialApplicationCount
-  );
+  const { applicationCount, highlightColor } = useApplicationProgress();
 
   const handleNavigateHome = () => {
-    window.dispatchEvent(new CustomEvent("navigationStarted"));
     router.push("/applications");
   };
 

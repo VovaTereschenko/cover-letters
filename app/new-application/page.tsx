@@ -1,10 +1,7 @@
-import { ApplicationCreation } from "@/features";
-import { getApplicationCountFromCookies } from "@/lib/cookies";
+"use client";
 
-export default async function NewApplicationPage() {
-  const initialApplicationsCount = await getApplicationCountFromCookies();
+import { ApplicationCreation } from "@/features/ApplicationCreation";
 
-  return (
-    <ApplicationCreation initialApplicationsCount={initialApplicationsCount} />
-  );
+export default function NewApplicationPage() {
+  return <ApplicationCreation />;
 }

@@ -94,7 +94,6 @@ export const createMockCallbacks = () => ({
   onGeneratedApplicationChange: jest.fn(),
   onSuccess: jest.fn(),
   onError: jest.fn(),
-  onHydrated: jest.fn(),
   showToast: jest.fn(),
   onChange: jest.fn(),
   onFocus: jest.fn(),

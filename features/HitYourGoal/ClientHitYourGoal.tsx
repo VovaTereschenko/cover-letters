@@ -2,15 +2,20 @@
 
 import { useRouter } from "next/navigation";
 import { HitYourGoal } from "@/features/HitYourGoal";
-import { useApplicationsCount } from "@/contexts/ApplicationsCountContext";
+import { useApplicationsCount, useHasHydrated } from "@/store/applications";
 
 const ClientHitYourGoal = () => {
   const router = useRouter();
-  const { applicationsCount } = useApplicationsCount();
+  const applicationsCount = useApplicationsCount();
+  const hasHydrated = useHasHydrated();
 
   const handleCreateNew = () => {
     router.push("/new-application");
   };
+
+  if (!hasHydrated) {
+    return <HitYourGoal onCreateNew={handleCreateNew} applicationsCount={0} />;
+  }
 
   return (
     <HitYourGoal

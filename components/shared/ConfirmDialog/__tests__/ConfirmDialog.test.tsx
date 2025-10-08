@@ -95,6 +95,9 @@ describe("ConfirmDialog", () => {
     render(<ConfirmDialog {...defaultProps} />);
 
     const dialog = await screen.findByRole("dialog");
+
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
     expect(dialog).toHaveFocus();
   });
 

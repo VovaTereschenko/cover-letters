@@ -19,6 +19,8 @@
   flex-direction: column;
   gap: var(--spacing-12);
   min-height: 100%;
+  min-width: 0; /* Позволяет элементам сжиматься */
+  overflow-wrap: break-word; /* Дополнительная защита */
 }
 
 .leftPanel .textareaSection {
@@ -54,6 +56,39 @@
 .title {
   padding-bottom: var(--spacing-8);
   border-bottom: 1px solid var(--color-border);
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
+}
+
+/* Larger title on desktop */
+@media (min-width: 768px) {
+  .title {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+}
+
+.title.generating {
+  color: var(--color-primary);
+  animation: pulse 2s infinite;
+}
+
+.title.completed {
+  color: var(--color-success);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .titlePlaceholder {
