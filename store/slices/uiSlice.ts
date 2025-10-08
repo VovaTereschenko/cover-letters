@@ -1,33 +1,56 @@
 import { StateCreator } from "zustand";
 import type { SavedApplication, HighlightColor } from "@/types";
 
-export interface UISlice {
+type ModalState = {
   isModalOpen: boolean;
   selectedApplication: SavedApplication | null;
   editedContent: string;
+};
 
+type DeleteConfirmState = {
   showDeleteConfirm: boolean;
   applicationToDelete: string | null;
+};
 
+type GoalAchievementState = {
   showGoalAchievement: boolean;
   previousCount: number;
+};
 
+type HighlightState = {
   highlightColor: HighlightColor;
+};
 
+type ModalActions = {
   openModal: (application: SavedApplication) => void;
   closeModal: () => void;
   setEditedContent: (content: string) => void;
+};
 
+type DeleteConfirmActions = {
   showDeleteConfirmDialog: (applicationId: string) => void;
   hideDeleteConfirmDialog: () => void;
+};
 
+type GoalAchievementActions = {
   showGoalAchievementDialog: () => void;
   hideGoalAchievementDialog: () => void;
   setPreviousCount: (count: number) => void;
+};
 
+type HighlightActions = {
   setHighlightColor: (color: HighlightColor) => void;
   triggerHighlight: (color: HighlightColor) => void;
-}
+};
+
+export type UISlice = ModalState &
+  DeleteConfirmState &
+  GoalAchievementState &
+  HighlightState &
+  ModalActions &
+  DeleteConfirmActions &
+  GoalAchievementActions &
+  HighlightActions;
 
 export const createUISlice: StateCreator<UISlice, [], [], UISlice> = (set) => ({
   isModalOpen: false,

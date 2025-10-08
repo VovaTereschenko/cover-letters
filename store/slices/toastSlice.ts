@@ -1,19 +1,23 @@
 import { StateCreator } from "zustand";
 import { ToastType } from "@/types";
 
-export interface ToastSlice {
+type ToastState = {
   isVisible: boolean;
   message: string;
   type: ToastType;
   show: boolean;
   shouldRender: boolean;
+};
 
+type ToastActions = {
   showToast: (message: string, type: ToastType) => void;
   hideToast: () => void;
   startShowAnimation: () => void;
   startHideAnimation: () => void;
   cleanupToast: () => void;
-}
+};
+
+export type ToastSlice = ToastState & ToastActions;
 
 export const createToastSlice: StateCreator<ToastSlice, [], [], ToastSlice> = (
   set

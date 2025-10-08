@@ -1,17 +1,25 @@
 import { StateCreator } from "zustand";
 import type { SavedApplication } from "@/types";
 
-export interface ApplicationsSlice {
+type ApplicationsState = {
   applications: SavedApplication[];
+};
 
+type ApplicationsGetters = {
   getApplications: () => SavedApplication[];
   getCount: () => number;
   getApplication: (id: string) => SavedApplication | undefined;
+};
 
+type ApplicationsActions = {
   addApplication: (application: SavedApplication) => void;
   updateApplication: (id: string, updates: Partial<SavedApplication>) => void;
   deleteApplication: (id: string) => void;
-}
+};
+
+export type ApplicationsSlice = ApplicationsState &
+  ApplicationsGetters &
+  ApplicationsActions;
 
 export const createApplicationsSlice: StateCreator<
   ApplicationsSlice,

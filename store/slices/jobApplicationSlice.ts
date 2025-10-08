@@ -2,14 +2,16 @@ import { StateCreator } from "zustand";
 import { UI_MESSAGES } from "@/constants/ai";
 import type { HighlightColor } from "@/types";
 
-export interface JobApplicationSlice {
+type JobApplicationState = {
   generatedApplication: string;
   titleText: string;
   isGenerating: boolean;
   applicationsCount: number;
   savedApplicationId: string;
   progressHighlightColor?: HighlightColor;
+};
 
+type JobApplicationActions = {
   setGeneratedApplication: (application: string) => void;
   setTitleText: (title: string) => void;
   setIsGenerating: (isGenerating: boolean) => void;
@@ -18,7 +20,9 @@ export interface JobApplicationSlice {
   setProgressHighlightColor: (color?: HighlightColor) => void;
   clearFormOnly: () => void;
   clearAll: () => void;
-}
+};
+
+export type JobApplicationSlice = JobApplicationState & JobApplicationActions;
 
 export const createJobApplicationSlice: StateCreator<
   JobApplicationSlice,
